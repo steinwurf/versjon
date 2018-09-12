@@ -23,6 +23,6 @@ Whn invoking ``versjon`` there are three mandatory arguments::
   Only the version name is provide as the value 'version'.
   Example:
 
-	 http://127.0.0.1/project/versions/{version}.html
+	 ``http://127.0.0.1/project/versions/{version}.html``
 
 * ``output`` the output json file.
