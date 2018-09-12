@@ -14,7 +14,7 @@ Command-line arguments
 
 Whn invoking ``versjon`` there are three mandatory arguments::
 
-    versjon directory url_format output [--extras JSON]
+    versjon directory url_format output
 
 * ``directory`` specifies the directory containing the versions.
   Each version should have it's own directory in this directory.
