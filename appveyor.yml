@@ -1,5 +1,3 @@
-build: false
-
 environment:
   matrix:
     # For Python versions available on Appveyor, see
@@ -9,9 +7,13 @@ environment:
     - PYTHON: "C:\\Python36"
     - PYTHON: "C:\\Python36-x64"
 
-
 install:
   - "%PYTHON%\\python.exe waf configure"
 
 test_script:
   - "%PYTHON%\\python.exe waf build --run_tests"
+
+notifications:
+  - provider: GitHubPullRequest
+    auth_token:
+      secure: 2P/5tzQN4ul49mJHyerfyDtTd8BsPv0UYI9EGnXGJrV9HJ8/CVfB0Su7eVmQSzH4
