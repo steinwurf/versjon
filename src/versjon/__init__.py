@@ -1,4 +1,6 @@
 #! /usr/bin/env python
 # encoding: utf-8
+from __future__ import absolute_import
 
-from versjon import *
+from versjon.utils import versions
+from versjon.utils import write_json

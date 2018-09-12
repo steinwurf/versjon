@@ -3,7 +3,7 @@
 
 import argparse
 import os
-import versjon
+import utils
 
 def directory_check (string):
     if not os.path.exists(string):
@@ -31,8 +31,8 @@ def cli():
 
     args = parser.parse_args()
 
-    versions = versjon.versions(args.directory, args.url_format)
-    versjon.write_json(versions, args.output)
+    versions = utils.versions(args.directory, args.url_format)
+    utils.write_json(versions, args.output)
 
 
 if __name__ == "__main__":

@@ -16,7 +16,6 @@ def test_versions(testdirectory):
     for expected_version in expected_versions:
         root.mkdir(expected_version)
     print(os.listdir(root.path()))
-
     versions = versjon.versions(
         root.path(), 'http://127.0.0.1:8080/root/{version}.html')
     print(" ".join([version['name'] for version in versions]))
