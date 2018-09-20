@@ -17,7 +17,7 @@ def cli():
 
     parser.add_argument(
         'selectors',
-        nargs='*',
+        nargs='+',
         help=
             'A selector is a regex which will determine if a directory in the '
             'given base path')
