@@ -1,39 +1,41 @@
 #! /usr/bin/env python
 # encoding: utf-8
 
+from __future__ import absolute_import
+
 import argparse
 import os
-import utils
-
-def directory_check (string):
-    if not os.path.exists(string):
-        raise argparse.ArgumentTypeError("path does not exist: '{string}'".format(string=string))
-
-    if not os.path.isdir(string):
-        raise argparse.ArgumentTypeError("path is not a directory: '{string}'".format(string=string))
-
-    return string
+import sys
+import versjon
 
 def cli():
     parser = argparse.ArgumentParser(description=
-        'Creates a json file with version names based on a directory.')
+        'Creates a json file with version names based on a a base path and a '
+        'set of selectors.')
+
+    parser.add_argument('--base_path', help='The base path.', default=r'.')
+
     parser.add_argument(
-        'directory',
-        type=directory_check,
-        help='The directory to base the version.json file on.')
+        'selectors',
+        nargs='+',
+        help=
+            'A selector is a regex which will determine if a directory in the '
+            'given base path')
 
     parser.add_argument('url_format', help=
-		'''The format string for generating the url of the version.
-		Example: "http://127.0.0.1/project/versions/{version}.html".
-		Here {version} will be replaced with the name of the versions found in the directory.
+		'''
+        The format string for generating the url of the version.
+        The generated string is based on the variable {path}.
+        Path is the path to the selected directory.
+		Sample url format string: "http://127.0.0.1/{path}".
+		Here {path} will be replaced with the selected paths.
 		''')
-    parser.add_argument('output', help='Output filename')
 
+    parser.add_argument('output_file', help='The name of the output file.')
     args = parser.parse_args()
 
-    versions = utils.versions(args.directory, args.url_format)
-    utils.write_json(versions, args.output)
-
+    versions = versjon.versions(args.base_path, args.selectors, args.url_format)
+    versjon.write_json(versions, args.output_file)
 
 if __name__ == "__main__":
     cli()
