@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import os
+import re
 import json
 import versjon
 
@@ -25,7 +26,7 @@ def test_versions(testdirectory):
     ten.mkdir('css')
     versions = versjon.versions(
         docs.path(),
-        [r'latest$', r'tags{sep}\d+\.\d+\.\d+$'.format(sep=os.sep)],
+        [r'latest$', r'tags{sep}\d+\.\d+\.\d+$'.format(sep=re.escape(os.sep))],
         'http://127.0.0.1:8080/{path}')
 
     expectations = [
