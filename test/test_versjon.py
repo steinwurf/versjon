@@ -23,10 +23,9 @@ def test_versions(testdirectory):
     ten = tags.mkdir('10.0.0')
     ten.mkdir('js')
     ten.mkdir('css')
-
     versions = versjon.versions(
         docs.path(),
-        [r'latest$', r'tags/\d+\.\d+\.\d+$'],
+        [r'latest$', r'tags{sep}\d+\.\d+\.\d+$'.format(sep=os.sep)],
         'http://127.0.0.1:8080/{path}')
 
     expectations = [
