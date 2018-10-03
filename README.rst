@@ -1,9 +1,10 @@
 Introduction
 ============
-.. image:: https://ci.appveyor.com/api/projects/status/rvumml3m3l08sjsl?svg=true
+
+.. image:: https://img.shields.io/appveyor/ci/SteinwurfApS/versjon/master.svg?style=flat-square&logo=appveyor
     :target: https://ci.appveyor.com/project/SteinwurfApS/versjon
 
-.. image:: https://travis-ci.org/steinwurf/versjon.svg?branch=master
+.. image:: https://img.shields.io/travis-ci/steinwurf/versjon/master.svg?style=flat-square&logo=travis
     :target: https://travis-ci.org/steinwurf/versjon
 
 The versions json generator ``versjon`` is a very small tool for generating a
