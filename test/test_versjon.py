@@ -13,27 +13,26 @@ def test_versions(testdirectory):
     static.mkdir('tags').mkdir('10.0.0')
     static.mkdir('js')
     static.mkdir('css')
-    tags = docs.mkdir('tags')
-    one = tags.mkdir('0.2.10')
+    one = docs.mkdir('0.2.10')
     one.mkdir('js')
     one.mkdir('css')
-    two = tags.mkdir('2.10.9')
+    two = docs.mkdir('2.10.9')
     two.mkdir('js')
     two.mkdir('css')
-    ten = tags.mkdir('10.0.0')
+    ten = docs.mkdir('10.0.0')
     ten.mkdir('js')
     ten.mkdir('css')
 
     versions = versjon.versions(
         docs.path(),
-        [r'latest$', r'tags/\d+\.\d+\.\d+$'],
+        [r'latest$', r'\d+\.\d+\.\d+$'],
         'http://127.0.0.1:8080/{path}')
 
     expectations = [
         { 'name': 'latest', 'url': 'http://127.0.0.1:8080/latest' },
-        { 'name': '10.0.0', 'url': 'http://127.0.0.1:8080/tags/10.0.0' },
-        { 'name': '2.10.9', 'url': 'http://127.0.0.1:8080/tags/2.10.9' },
-        { 'name': '0.2.10', 'url': 'http://127.0.0.1:8080/tags/0.2.10' },
+        { 'name': '10.0.0', 'url': 'http://127.0.0.1:8080/10.0.0' },
+        { 'name': '2.10.9', 'url': 'http://127.0.0.1:8080/2.10.9' },
+        { 'name': '0.2.10', 'url': 'http://127.0.0.1:8080/0.2.10' },
     ]
 
     assert len(versions) == len(expectations)
@@ -45,7 +44,7 @@ def test_versions(testdirectory):
 
     cmd = 'versjon --base_path {base_path} {selectors} {url_format} {output_file}'.format(
         base_path=docs.path(),
-        selectors=' '.join([r'latest$', r'tags/\d+\.\d+\.\d+$']),
+        selectors=' '.join([r'latest$', r'\d+\.\d+\.\d+$']),
         url_format='http://127.0.0.1:8080/{path}',
         output_file='versions.json',
     )
