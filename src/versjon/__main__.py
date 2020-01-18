@@ -49,6 +49,8 @@ def cli(docs_path):
     # For each path visit all other paths
     for path_from in versjons:
 
+        # We rebuild the json file from scratch to avoid inconsistencies if
+        # the verjson.json files contain information from previous runs
         versjon_json = {'current': current_version(path_from), 'all': []}
 
         for path_to in versjons:
