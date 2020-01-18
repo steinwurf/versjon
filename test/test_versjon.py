@@ -5,7 +5,8 @@ import os
 import json
 import versjon
 
-def test_versions(testdirectory):
+
+def _test_versions(testdirectory):
     project = testdirectory.mkdir('project_name')
     docs = project.mkdir('docs')
     latest = docs.mkdir('latest')
@@ -29,10 +30,10 @@ def test_versions(testdirectory):
         'http://127.0.0.1:8080/{path}')
 
     expectations = [
-        { 'name': 'latest', 'url': 'http://127.0.0.1:8080/latest' },
-        { 'name': '10.0.0', 'url': 'http://127.0.0.1:8080/10.0.0' },
-        { 'name': '2.10.9', 'url': 'http://127.0.0.1:8080/2.10.9' },
-        { 'name': '0.2.10', 'url': 'http://127.0.0.1:8080/0.2.10' },
+        {'name': 'latest', 'url': 'http://127.0.0.1:8080/latest'},
+        {'name': '10.0.0', 'url': 'http://127.0.0.1:8080/10.0.0'},
+        {'name': '2.10.9', 'url': 'http://127.0.0.1:8080/2.10.9'},
+        {'name': '0.2.10', 'url': 'http://127.0.0.1:8080/0.2.10'},
     ]
 
     assert len(versions) == len(expectations)
@@ -40,7 +41,6 @@ def test_versions(testdirectory):
     for version, expectation in zip(versions, expectations):
         assert version['name'] == expectation['name']
         assert version['url'] == expectation['url']
-
 
     cmd = 'versjon --base_path {base_path} {selectors} {url_format} {output_file}'.format(
         base_path=docs.path(),
@@ -59,7 +59,8 @@ def test_versions(testdirectory):
             assert read_version['name'] == version['name']
             assert read_version['url'] in version['url']
 
-def test_write_json(testdirectory):
+
+def _test_write_json(testdirectory):
     versions = {'name': '1.0.0', 'url': 'some_url'}
     temp = testdirectory.mkdir('temp')
     versjon.write_json(versions, os.path.join(temp.path(), 'versions.json'))

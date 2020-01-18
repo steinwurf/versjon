@@ -2,25 +2,33 @@
     <div class="sidebar-wrapper">
         <h2>{{ _('Versions') }}</h2>
         <div class="sidebar-versions">
-            <dl id="versions"></dl>
+            <dl id="versjon"></dl>
         </div>
     </div>
 </div>
 <script>
     $(document).ready(function () {
+
+        const versjon_path = '{{ pathto("versjon.json", 1) }}';
+        const root_path = '{{ pathto("./", 1) }}';
+
+        console.log(root_path)
+
         function addVersion(version, path) {
             const a = $('<a></a>');
             a.text(version);
-            a.attr('href', path);
+            a.attr('href', root_path + path);
             const dd = $('<dd></dd>').append(a);
             let final = dd;
             if (path === '.') {
                 final = $('<strong></strong>').append(dd);
             }
-            $('#versions').append(final);
+            $('#versjon').append(final);
         }
-        $.getJSON('versjon.json', {}).done((versions) => {
-            versions.forEach(version => addVersion(version['version'], version['path']));
+
+        $.getJSON(versjon_path).done((versions) => {
+            console.log(versions)
+            versions['all'].forEach(version => addVersion(version['version'], version['path']));
         });
     });
 </script>

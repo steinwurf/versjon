@@ -98,5 +98,5 @@ setup(
     # http://setuptools.readthedocs.io/en/latest/setuptools.html#including-data-files
     #
     package_data={"versjon": ["templates/*"]},
-    install_requires=['semantic_version', ],
+    install_requires=['semantic_version', 'click'],
 )

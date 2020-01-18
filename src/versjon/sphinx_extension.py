@@ -24,9 +24,12 @@ def write_versjon(app):
     As an example the initial versjon.json file could contain the following
     information:
 
-        [
-            {'version': '1.0.0', 'path': '.'}
-        ]
+        {
+            'current': '1.0.0',
+            'all': [
+                {'version': '1.0.0', 'path': '.'}
+            ]
+        }
 
     You can override the version variable in the configuration
     when running sphinx-build:
@@ -40,11 +43,14 @@ def write_versjon(app):
     As an example after running the versjon tool a versjon.json file could
     look something like:
 
-        [
-            {'version': 'latest', 'path': '../latest'}
-            {'version': '1.0.0', 'path': '.'},
-            {'version': '2.0.0', 'path': '../2.0.0'}
-        ]
+        {
+            'current': '1.0.0',
+            'all': [
+                {'version': 'latest', 'path': '../latest'}
+                {'version': '2.0.0', 'path': '../2.0.0'}
+                {'version': '1.0.0', 'path': '.'},
+            ]
+        }
 
     The versjon.json then loaded by the HTML templates to generate version
     selectors and links.
@@ -52,7 +58,8 @@ def write_versjon(app):
     :param app: The application object, which is an instance of Sphinx.
     """
 
-    versjon = [{'version': app.config.version, 'path': '.'}]
+    versjon = {'current': app.config.version, 'all': [
+        {'version': app.config.version, 'path': '.'}]}
 
     with open(os.path.join(app.outdir, 'versjon.json'), 'w') as json_file:
         json.dump(versjon, json_file, indent=4, sort_keys=True)
@@ -64,7 +71,7 @@ def inject_sidebar(app, config):
     if not config['versjon_inject_sidebar']:
         return
 
-    #print("SIDEBARS {}".format(config['html_sidebars']))
+    # print("SIDEBARS {}".format(config['html_sidebars']))
 
     config['templates_path'].append(os.path.join(
         os.path.dirname(__file__), 'templates'))

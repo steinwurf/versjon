@@ -10,6 +10,8 @@ Welcome to test_project's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   sub/sub
+
 
 
 Indices and tables
