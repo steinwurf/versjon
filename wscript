@@ -19,6 +19,7 @@ def options(opt):
         '--pytest_basetemp', default='pytest_temp',
         help='Set the prefix folder where pytest executes the tests')
 
+
 def configure(conf):
     pass
 
@@ -27,8 +28,8 @@ def build(bld):
 
     # Create a virtualenv in the source folder and build universal wheel
     # Make sure the virtualenv Python module is in path
-    with bld.create_virtualenv(cwd=bld.bldnode.abspath()) as venv:
-        venv.pip_install(packages=['wheel'])
+    with bld.create_virtualenv() as venv:
+        venv.run(cmd='python -m pip install wheel')
         venv.run(cmd='python setup.py bdist_wheel --universal', cwd=bld.path)
 
     # Delete the egg-info directory, do not understand why this is created
@@ -46,13 +47,11 @@ def build(bld):
 
 def _pytest(bld):
 
-    with bld.create_virtualenv(cwd=bld.bldnode.abspath()) as venv:
+    with bld.create_virtualenv() as venv:
 
-        # If we need to be able to run doxygen from the system
-        venv.env['PATH'] = os.path.pathsep.join(
-            [venv.env['PATH'], os.environ['PATH']])
-
-        venv.pip_install(['pytest', 'pytest-testdirectory'])
+        venv.run("python -m pip install pytest")
+        venv.run("python -m pip install pytest-testdirectory")
+        venv.run("python -m pip install sphinx")
 
         # Install the pytest-testdirectory plugin in the virtualenv
         # Find the .whl file in the dist folder.
