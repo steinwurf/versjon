@@ -47,22 +47,22 @@ def cli(docs_path):
     versjons = list(docs_path.glob('**/versjon.json'))
 
     # For each path visit all other paths
-    for path_from in versjons:
+    for from_path in versjons:
 
         # We rebuild the json file from scratch to avoid inconsistencies if
         # the verjson.json files contain information from previous runs
-        versjon_json = {'current': current_version(path_from), 'all': []}
+        versjon_json = {'current': current_version(from_path), 'all': []}
 
-        for path_to in versjons:
-            print(f"{path_from.parent} => {path_to.parent}")
+        for to_path in versjons:
+            print(f"{from_path.parent} => {to_path.parent}")
 
             # Get the version we are "pointing" to
-            version = current_version(path_to)
+            version = current_version(to_path)
 
             # We want the relative path from the directory containing the
             # versjon.json not the verjson.json file itself.
             path = os.path.relpath(
-                path=path_to.parent, start=path_from.parent)
+                path=to_path.parent, start=from_path.parent)
 
             # Store the version and its path in the all section
             versjon_json['all'].append({'version': version, 'path': path})
@@ -70,7 +70,7 @@ def cli(docs_path):
         # Sort all versions
         versjon_json['all'] = sort_versions(versjon_json['all'])
 
-        with open(path_from, 'w') as json_file:
+        with open(from_path, 'w') as json_file:
             json.dump(versjon_json, json_file, indent=4, sort_keys=True)
 
 
