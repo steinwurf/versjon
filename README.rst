@@ -57,9 +57,9 @@ Building the docs
 
 
    ``versjon`` will use whatever ``version`` is specified in the Sphinx
-    configuration: https://www.sphinx-doc.org/en/master/usage/configuration.html
-    If you have the specified the ``version`` number in ``conf.py`` you can omit
-    the ``-D version`` option to Sphinx build.
+   configuration: https://www.sphinx-doc.org/en/master/usage/configuration.html
+   If you have the specified the ``version`` number in ``conf.py`` you can omit
+   the ``-D version`` option to Sphinx build.
 
 3. Run ``versjon`` in the common diretory - and you are done.
 
