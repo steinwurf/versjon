@@ -71,7 +71,7 @@ The easiest way is probably to copy the default ``src/templates/versjon.html``
 one and adapt it. To use your own templates in Sphinx you need to add the
 following to ``conf.py``::
 
-    templates_path = ['mytemplate/wicked_versions.html']
+    templates_path = ['docs/mytemplate']
 
 Also you need to add the template e.g. to the ``html_sidebars`` list.
 
