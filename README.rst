@@ -97,8 +97,8 @@ information::
 There are three keys:
 
 * ``format``: This is the version of the ``versjon`` JSON format :) It allows
-   the ``verjson`` tool to output JSON that is compatible with older versions (
-   we don't do that atm. but now we have the mechanism).
+  the ``verjson`` tool to output JSON that is compatible with older versions (
+  we don't do that atm. but now we have the mechanism).
 * ``current``: This is the actual project version specified the Sphinx
   configuration: https://www.sphinx-doc.org/en/master/usage/configuration.html
 * ``all``: This contains a list of all ``versjon`` generated versions and a
