@@ -1,6 +1,8 @@
 import os
 import json
 
+import semantic_version as semver
+
 import sphinx
 import sphinx.util
 import sphinx.util.logging
@@ -18,8 +20,15 @@ def write_versjon(app):
     :param app: The application object, which is an instance of Sphinx.
     """
 
-    versjon = {'format': 1, 'current': app.config.version, 'all': [
-        {'version': app.config.version, 'path': '.'}]}
+    # The version specified in Sphinx
+    version = app.config.version
+
+    versjon = {'format': 1, 'current': version, 'semver': [], 'other': []}
+
+    if semver.validate(version):
+        versjon['semver'].append({'version': version, 'path': '.'})
+    else:
+        versjon['other'].append({'version': version, 'path': '.'})
 
     with open(os.path.join(app.outdir, 'versjon.json'), 'w') as json_file:
         json.dump(versjon, json_file, indent=4, sort_keys=True)

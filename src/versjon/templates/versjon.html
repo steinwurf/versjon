@@ -28,7 +28,9 @@
 
         $.getJSON(versjon_path).done((versions) => {
             console.log(versions)
-            versions['all'].forEach(version => addVersion(version['version'], version['path']));
+            versions['other'].forEach(version => addVersion(version['version'], version['path']));
+            versions['semver'].forEach(version => addVersion(version['version'], version['path']));
+
         });
     });
 </script>
