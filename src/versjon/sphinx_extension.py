@@ -25,9 +25,10 @@ def write_versjon(app):
     information:
 
         {
-            'current': '1.0.0',
+            'versjon': '1.0.0',
+            'current': '5.1.2',
             'all': [
-                {'version': '1.0.0', 'path': '.'}
+                {'version': '5.1.2', 'path': '.'}
             ]
         }
 
