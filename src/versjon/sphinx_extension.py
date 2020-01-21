@@ -10,6 +10,7 @@ import sphinx.builders
 import sphinx.builders.html
 import sphinx.application
 import sphinx.theming
+import sphinx.errors
 
 VERSION = '0.0.0'
 
@@ -22,6 +23,12 @@ def write_versjon(app):
 
     # The version specified in Sphinx
     version = app.config.version
+
+    if not version:
+        raise sphinx.errors.ExtensionError(
+            'The versjon extension requires '
+            'a version number. Add one to conf.py or pass '
+            'it to sphinx build using "-D version=X.Y.Z".')
 
     versjon = {'format': 1, 'current': version, 'semver': [], 'other': []}
 

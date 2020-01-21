@@ -51,6 +51,8 @@ def _pytest(bld):
 
         venv.run("python -m pip install pytest")
         venv.run("python -m pip install pytest-testdirectory")
+        venv.run(
+            "python -m pip install git+https://github.com/steinwurf/pytest-datarecorder.git@47f1f06")
         venv.run("python -m pip install sphinx")
 
         # Install the pytest-testdirectory plugin in the virtualenv

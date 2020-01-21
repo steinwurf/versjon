@@ -2,7 +2,7 @@
     <div class="sidebar-wrapper">
         <h3>{{ _('Versions') }}</h3>
         <div class="sidebar-versions">
-            <dl id="versjon"></dl>
+            <dl id="versjon_sidebar"></dl>
         </div>
     </div>
 </div>
@@ -23,7 +23,7 @@
             if (path === '.') {
                 final = $('<strong></strong>').append(dd);
             }
-            $('#versjon').append(final);
+            $('#versjon_sidebar').append(final);
         }
 
         $.getJSON(versjon_path).done((versions) => {

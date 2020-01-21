@@ -24,9 +24,9 @@ copyright = u'2020, Steinwurf ApS'
 author = u'Steinwurf ApS'
 
 # The short X.Y version
-version = u'1.2.3'
+version = u''
 # The full version, including alpha/beta/rc tags
-#release = u''
+release = u''
 
 
 # -- General configuration ---------------------------------------------------
