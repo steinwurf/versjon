@@ -32,6 +32,10 @@ def build(bld):
         venv.run(cmd='python -m pip install wheel')
         venv.run(cmd='python setup.py bdist_wheel --universal', cwd=bld.path)
 
+        # Run the unit-tests
+        if bld.options.run_tests:
+            _pytest(bld=bld, venv=venv)
+
     # Delete the egg-info directory, do not understand why this is created
     # when we build a wheel. But, it is - perhaps in the future there will
     # be some way to disable its creation.
@@ -40,54 +44,48 @@ def build(bld):
     if os.path.isdir(egg_info):
         waflib.extras.wurf.directory.remove_directory(path=egg_info)
 
-    # Run the unit-tests
-    if bld.options.run_tests:
-        _pytest(bld=bld)
 
+def _pytest(bld, venv):
 
-def _pytest(bld):
+    venv.run("python -m pip install pytest")
+    venv.run("python -m pip install pytest-testdirectory")
+    venv.run(
+        "python -m pip install git+https://github.com/steinwurf/pytest-datarecorder.git@cbb2643")
+    venv.run("python -m pip install sphinx")
 
-    with bld.create_virtualenv() as venv:
+    # Install the pytest-testdirectory plugin in the virtualenv
+    # Find the .whl file in the dist folder.
 
-        venv.run("python -m pip install pytest")
-        venv.run("python -m pip install pytest-testdirectory")
-        venv.run(
-            "python -m pip install git+https://github.com/steinwurf/pytest-datarecorder.git@47f1f06")
-        venv.run("python -m pip install sphinx")
+    wheel = bld.path.ant_glob('dist/*-'+VERSION+'-*.whl')
 
-        # Install the pytest-testdirectory plugin in the virtualenv
-        # Find the .whl file in the dist folder.
+    if not len(wheel) == 1:
+        bld.fatal('No wheel found (or version mismatch)')
+    wheel = wheel[0]
 
-        wheel = bld.path.ant_glob('dist/*-'+VERSION+'-*.whl')
+    venv.run('python -m pip install {}'.format(wheel))
 
-        if not len(wheel) == 1:
-            bld.fatal('No wheel found (or version mismatch)')
-        wheel = wheel[0]
+    # We override the pytest temp folder with the basetemp option,
+    # so the test folders will be available at the specified location
+    # on all platforms. The default location is the "pytest" local folder.
+    basetemp = os.path.abspath(os.path.expanduser(
+        bld.options.pytest_basetemp))
 
-        venv.run('python -m pip install {}'.format(wheel))
+    # We need to manually remove the previously created basetemp folder,
+    # because pytest uses os.listdir in the removal process, and that fails
+    # if there are any broken symlinks in that folder.
+    if os.path.exists(basetemp):
+        waflib.extras.wurf.directory.remove_directory(path=basetemp)
 
-        # We override the pytest temp folder with the basetemp option,
-        # so the test folders will be available at the specified location
-        # on all platforms. The default location is the "pytest" local folder.
-        basetemp = os.path.abspath(os.path.expanduser(
-            bld.options.pytest_basetemp))
+    testdir = bld.path.find_node('test')
 
-        # We need to manually remove the previously created basetemp folder,
-        # because pytest uses os.listdir in the removal process, and that fails
-        # if there are any broken symlinks in that folder.
-        if os.path.exists(basetemp):
-            waflib.extras.wurf.directory.remove_directory(path=basetemp)
+    # Make the basetemp directory
+    os.makedirs(basetemp)
 
-        testdir = bld.path.find_node('test')
+    # Main test command
+    command = 'python -B -m pytest {} --basetemp {}'.format(
+        testdir.abspath(), os.path.join(basetemp, 'unit_tests'))
 
-        # Make the basetemp directory
-        os.makedirs(basetemp)
-
-        # Main test command
-        command = 'python -B -m pytest {} --basetemp {}'.format(
-            testdir.abspath(), os.path.join(basetemp, 'unit_tests'))
-
-        # Make python not write any .pyc files. These may linger around
-        # in the file system and make some tests pass although their .py
-        # counter-part has been e.g. deleted
-        venv.run(cmd=command, cwd=bld.path)
+    # Make python not write any .pyc files. These may linger around
+    # in the file system and make some tests pass although their .py
+    # counter-part has been e.g. deleted
+    venv.run(cmd=command, cwd=bld.path)

@@ -28,14 +28,21 @@ def test_run(testdirectory, datarecorder):
     print(r)
 
     def record_json(project_dir, build_dir):
-        assert project_dir.join(build_dir).contains_file('versjon.json')
+
+        json_file = os.path.join(project_dir.path(), build_dir, 'versjon.json')
+
+        assert os.path.isfile(json_file)
+
+        recording_file = os.path.join(
+            'test', 'recordings', build_dir + '_versjon.json')
+
+        datarecorder.record_file(
+            data_file=json_file, recording_file=recording_file)
 
     record_json(project_dir=project_dir, build_dir='build_1.0.0')
     record_json(project_dir=project_dir, build_dir='build_1.1.0')
     record_json(project_dir=project_dir, build_dir='build_2.0.0')
     record_json(project_dir=project_dir, build_dir='build_master')
-
-    assert 0
 
 
 def test_run_no_version(testdirectory):
