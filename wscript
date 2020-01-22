@@ -45,24 +45,33 @@ def build(bld):
         waflib.extras.wurf.directory.remove_directory(path=egg_info)
 
 
-def _pytest(bld, venv):
+def _find_wheel(ctx):
+    """ Find the .whl file in the dist folder. """
 
-    venv.run("python -m pip install pytest")
-    venv.run("python -m pip install pytest-testdirectory")
-    venv.run(
-        "python -m pip install git+https://github.com/steinwurf/pytest-datarecorder.git@cbb2643")
-    venv.run("python -m pip install sphinx")
-
-    # Install the pytest-testdirectory plugin in the virtualenv
-    # Find the .whl file in the dist folder.
-
-    wheel = bld.path.ant_glob('dist/*-'+VERSION+'-*.whl')
+    wheel = ctx.path.ant_glob('dist/*-'+VERSION+'-*.whl')
 
     if not len(wheel) == 1:
-        bld.fatal('No wheel found (or version mismatch)')
-    wheel = wheel[0]
+        ctx.fatal('No wheel found (or version mismatch)')
+    else:
+        wheel = wheel[0]
+        waflib.Logs.info('Wheel %s', wheel)
+        return wheel
 
-    venv.run('python -m pip install {}'.format(wheel))
+
+def _pytest(bld, venv):
+
+    # To update the requirements.txt just delete it - a fresh one
+    # will be generated from test/requirements.in
+    if not os.path.isfile('test/requirements.txt'):
+        venv.run('python -m pip install pip-tools')
+        venv.run('pip-compile test/requirements.in')
+
+    venv.run('python -m pip install -r test/requirements.txt')
+
+    # Install our python wheel in the virtualenv for testing
+    wheel = _find_wheel(ctx=bld)
+
+    venv.run(f'python -m pip install {wheel}')
 
     # We override the pytest temp folder with the basetemp option,
     # so the test folders will be available at the specified location
@@ -78,14 +87,8 @@ def _pytest(bld, venv):
 
     testdir = bld.path.find_node('test')
 
-    # Make the basetemp directory
-    os.makedirs(basetemp)
-
     # Main test command
-    command = 'python -B -m pytest {} --basetemp {}'.format(
-        testdir.abspath(), os.path.join(basetemp, 'unit_tests'))
+    venv.run(f'python -B -m pytest {testdir.abspath()} --basetemp {basetemp}')
 
-    # Make python not write any .pyc files. These may linger around
-    # in the file system and make some tests pass although their .py
-    # counter-part has been e.g. deleted
-    venv.run(cmd=command, cwd=bld.path)
+    # Check the package
+    venv.run(f'twine check {wheel}')

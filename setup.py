@@ -68,6 +68,7 @@ setup(
     description=(
         "Tool for generating a json file with the name and url of versions."),
     long_description=long_description,
+    long_description_content_type='text/x-rst',
     url='https://github.com/steinwurf/',
     author='Steinwurf ApS',
     author_email='contact@steinwurf.com',
