@@ -65,8 +65,10 @@ VERSION = find_version()
 setup(
     name='versjon',
     version=VERSION,
-    description=("Tool for generating a json file with the name and url of versions."),
+    description=(
+        "Tool for generating a json file with the name and url of versions."),
     long_description=long_description,
+    long_description_content_type='text/x-rst',
     url='https://github.com/steinwurf/',
     author='Steinwurf ApS',
     author_email='contact@steinwurf.com',
@@ -91,5 +93,11 @@ setup(
     keywords=('versjon'),
     packages=find_packages(where='src', exclude=['test']),
     package_dir={"": "src"},
-    install_requires=['semantic_version'],
+    # How to include data in a package? We use the approach
+    # outlined here https://stackoverflow.com/a/14211600 more
+    # documentation on this:
+    # http://setuptools.readthedocs.io/en/latest/setuptools.html#including-data-files
+    #
+    package_data={"versjon": ["templates/*"]},
+    install_requires=['semantic_version', 'click', 'colorama'],
 )

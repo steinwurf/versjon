@@ -1,0 +1,36 @@
+<div class="sidebar-block">
+    <div class="sidebar-wrapper">
+        <h3>{{ _('Versions') }}</h3>
+        <div class="sidebar-versions">
+            <dl id="versjon_sidebar"></dl>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+
+        const versjon_path = '{{ pathto("versjon.json", 1) }}';
+        const root_path = '{{ pathto("./", 1) }}';
+
+        console.log(root_path)
+
+        function addVersion(version, path) {
+            const a = $('<a></a>');
+            a.text(version);
+            a.attr('href', root_path + path);
+            const dd = $('<dd></dd>').append(a);
+            let final = dd;
+            if (path === '.') {
+                final = $('<strong></strong>').append(dd);
+            }
+            $('#versjon_sidebar').append(final);
+        }
+
+        $.getJSON(versjon_path).done((versions) => {
+            console.log(versions)
+            versions['other'].forEach(version => addVersion(version['version'], version['path']));
+            versions['semver'].forEach(version => addVersion(version['version'], version['path']));
+
+        });
+    });
+</script>

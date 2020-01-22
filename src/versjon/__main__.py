@@ -1,41 +1,30 @@
 #! /usr/bin/env python
 # encoding: utf-8
 
-from __future__ import absolute_import
 
-import argparse
-import os
+import click
+import colorama
 import sys
-import versjon
 
-def cli():
-    parser = argparse.ArgumentParser(description=
-        'Creates a json file with version names based on a a base path and a '
-        'set of selectors.')
+from .versjon_tool import run
 
-    parser.add_argument('--base_path', help='The base path.', default=r'.')
 
-    parser.add_argument(
-        'selectors',
-        nargs='+',
-        help=
-            'A selector is a regex which will determine if a directory in the '
-            'given base path')
+@click.command()
+@click.option('-d', '--docs_path', default='.')
+@click.option('-v', '--verbose', is_flag=True)
+def cli(docs_path, verbose):
+    try:
+        run(docs_path=docs_path)
+    except Exception as e:
 
-    parser.add_argument('url_format', help=
-		'''
-        The format string for generating the url of the version.
-        The generated string is based on the variable {path}.
-        Path is the path to the selected directory.
-		Sample url format string: "http://127.0.0.1/{path}".
-		Here {path} will be replaced with the selected paths.
-		''')
+        if verbose:
+            # We just propagate the exception out
+            raise
 
-    parser.add_argument('output_file', help='The name of the output file.')
-    args = parser.parse_args()
+        colorama.init()
+        print(colorama.Fore.RED + str(e))
+        sys.exit(1)
 
-    versions = versjon.versions(args.base_path, args.selectors, args.url_format)
-    versjon.write_json(versions, args.output_file)
 
 if __name__ == "__main__":
     cli()
