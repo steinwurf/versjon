@@ -50,8 +50,8 @@ def run(docs_path):
 
             # We want the relative path from the directory containing the
             # versjon.json not the verjson.json file itself.
-            path = os.path.relpath(
-                path=to_path.parent, start=from_path.parent)
+            path = pathlib.Path(os.path.relpath(
+                path=to_path.parent, start=from_path.parent)).as_posix()
 
             # Store the version and its path in the all section
             if semver.validate(version):

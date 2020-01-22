@@ -89,8 +89,10 @@ information::
     {
         'format': 1,
         'current': '5.1.2',
-        'all': [
+        'semver': [
             {'version': '5.1.2', 'path': '.'}
+        ],
+        'other': [
         ]
     }
 
@@ -101,12 +103,14 @@ There are three keys:
   we don't do that atm. but now we have the mechanism).
 * ``current``: This is the actual project version specified the Sphinx
   configuration: https://www.sphinx-doc.org/en/master/usage/configuration.html
-* ``all``: This contains a list of all ``versjon`` generated versions and a
-  relative path to them (useful for generating links in the documentation).
+* ``semver``: This contains a list of all ``versjon`` generated versions matching
+  the semantic versioning scheme and a relative path to them (useful for
+  generating links in the documentation).
 
   Inside the list we have a dictionary contaning ``version`` and ``path`` keys.
   The list is sorted such that non-semver versions appear first followed by
   semver versions (newest first).
+* ``other``: This is all the versions that do not match semantic versioning.
 
 After running ``sphinx-build`` on the versions you want to have included,
 the ``versjon`` tool can traverse the folders and update the ``versjon.json``
@@ -118,9 +122,11 @@ look something like::
     {
         'format': 1,
         'current': '1.0.0',
-        'all': [
-            {'version': 'latest', 'path': '../latest'}
+        'semver': [
             {'version': '2.0.0', 'path': '../2.0.0'}
             {'version': '1.0.0', 'path': '.'},
+        ],
+        'other': [
+            {'version': 'latest', 'path': '../latest'}
         ]
     }
