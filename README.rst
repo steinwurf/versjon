@@ -111,6 +111,7 @@ There are three keys:
   The list is sorted such that non-semver versions appear first followed by
   semver versions (newest first).
 * ``other``: This is all the versions that do not match semantic versioning.
+  The list contains the same dictionary as the ``semver`` list.
 
 After running ``sphinx-build`` on the versions you want to have included,
 the ``versjon`` tool can traverse the folders and update the ``versjon.json``
