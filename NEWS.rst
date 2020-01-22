@@ -6,4 +6,5 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Major: Rewrote the tool to become what is described in README.
+* Major: Supports Python 3.6 and up.
