@@ -131,3 +131,13 @@ look something like::
             {'version': 'latest', 'path': '../latest'}
         ]
     }
+
+
+Sphinx integration
+------------------
+
+We integrate with Sphinx by looking for the ``environment.pickle`` saved
+by Sphinx when building our documents.
+
+We make the following assumptions the ``.doctree`` directory containing
+the
