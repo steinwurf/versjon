@@ -7,6 +7,7 @@ import os
 import pathlib
 import pickle
 import sphobjinv
+import bs4
 
 import semantic_version as semver
 
@@ -173,7 +174,7 @@ def current_version(objects_file):
     """ Return the current version of an objects.inv file"""
     inv = sphobjinv.Inventory(objects_file)
 
-    print
+    print(inv.json_dict())
 
     return inv.version
 
@@ -192,7 +193,44 @@ def run(docs_path):
     builds = list(docs_path.glob('**/objects.inv'))
     print(builds)
 
+    # Get the HTML to inject
+    template_path = os.path.join(
+        os.path.dirname(__file__), 'templates')
+
+    style_path = os.path.join(template_path, 'style.html')
+    versjon_path = os.path.join(template_path, 'versjon.html')
+
+    with open(style_path) as style_file:
+        style_data = style_file.read()
+
+    with open(versjon_path) as versjon_file:
+        versjon_data = versjon_file.read()
+
     for build in builds:
         version = current_version(build)
         print(version)
 
+        html_pages = list(build.parent.glob('**/*.html'))
+        print(html_pages)
+
+        for html_page in html_pages:
+
+            with open(html_page) as html_file:
+                html_data = html_file.read()
+
+            # print(html_data)
+
+            page = bs4.BeautifulSoup(html_data, features="html.parser")
+            style = bs4.BeautifulSoup(style_data, features="html.parser")
+            versjon = bs4.BeautifulSoup(versjon_data, features="html.parser")
+
+            # print(page.html())
+
+            page.head.append(style)
+            page.body.extend(versjon)
+
+            print(page)
+
+            with open(html_page, 'w') as html_file:
+                html_file.write(str(page))
+            # print(html_data)

@@ -44,8 +44,8 @@ def write_versjon(app):
 def inject_templates_path(app, config):
     """ Injects our templates_path such that we can use it in html_sidebars"""
 
-    config['templates_path'].append(os.path.join(
-        os.path.dirname(__file__), 'templates'))
+    # config['templates_path'].append(os.path.join(
+    #     os.path.dirname(__file__), 'templates'))
 
 
 def setup(app):
