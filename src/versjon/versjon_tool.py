@@ -173,6 +173,8 @@ def current_version(objects_file):
     """ Return the current version of an objects.inv file"""
     inv = sphobjinv.Inventory(objects_file)
 
+    print
+
     return inv.version
 
 
@@ -193,3 +195,4 @@ def run(docs_path):
     for build in builds:
         version = current_version(build)
         print(version)
+
