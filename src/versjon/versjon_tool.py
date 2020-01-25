@@ -8,175 +8,98 @@ import pathlib
 import pickle
 import sphobjinv
 import bs4
+import functools
 
 import semantic_version as semver
 
-
-def _current_version(versjon_path):
-    """ Return the current version of a versjon.json file"""
-    with open(versjon_path) as json_file:
-        data = json.load(json_file)
-        return data['current']
+from . import template_render
 
 
-def _run(docs_path):
-    """ Run the versjon tool.
-
-    :param docs_path: The path to the documentation as a string
-    """
-    print(f'Running in {docs_path}')
-
-    # Transform to Path
-    docs_path = pathlib.Path(docs_path)
-
-    # Get all the versjon.json in the the path
-    versjons = list(docs_path.glob('**/versjon.json'))
-
-    if not versjons:
-        raise RuntimeError(f'No versjon.json files found in {docs_path}.')
-
-    # For each path visit all other paths
-    for from_path in versjons:
-
-        # Get the current version
-        current = current_version(from_path)
-
-        # We rebuild the json file from scratch to avoid inconsistencies if
-        # the verjson.json files contain information from previous runs
-        versjon_json = {
-            'format': 1, 'current': current, 'semver': [], 'other': []}
-
-        for to_path in versjons:
-            print(f"{from_path.parent} => {to_path.parent}")
-
-            # Get the version we are "pointing" to
-            version = current_version(to_path)
-
-            # We want the relative path from the directory containing the
-            # versjon.json not the verjson.json file itself.
-            path = pathlib.Path(os.path.relpath(
-                path=to_path.parent, start=from_path.parent)).as_posix()
-
-            # Store the version and its path in the all section
-            if semver.validate(version):
-
-                versjon_json['semver'].append(
-                    {'version': version, 'path': path})
-
-            else:
-
-                versjon_json['other'].append(
-                    {'version': version, 'path': path})
-
-        # Sort all versions
-        versjon_json['semver'] = sorted(
-            versjon_json['semver'], key=lambda v: semver.Version(v['version']),
-            reverse=True)
-
-        versjon_json['other'] = sorted(
-            versjon_json['other'], key=lambda v: v['version'])
-
-        with open(from_path, 'w') as json_file:
-            json.dump(versjon_json, json_file, indent=4, sort_keys=True)
-
-
-def _1current_version(pickle_file):
-    """ Return the current version of an environment.pickle file"""
-    with open(pickle_file, 'rb') as file_object:
-        pickle_data = pickle.load(file_object)
-
-        # The pickle_data is a sphinx.environment.BuildEnvironment object. One
-        # of the members is a sphinx.Config object, which contains the version
-        # used in conf.py or during sphinx-build.
-
-        return pickle_data.config['version']
-
-
-def rewrite_html(path, versjon):
-
-    html_pages = list(path.glob('**/*.html'))
-
-    print(html_pages)
-
-
-def _1run(docs_path):
-    """ Run the versjon tool.
-
-    :param docs_path: The path to the documentation as a string
-    """
-    # Transform to Path
-    docs_path = pathlib.Path(docs_path)
-
-    print(f'Running in {docs_path.resolve()}')
-
-    # Get all the Sphinx builds in the the path
-    builds = list(docs_path.glob('**/environment.pickle'))
-
-    print(builds)
-
-    for from_path in builds:
-
-        # Get the current version
-        current = current_version(from_path)
-
-        if not current:
-            raise RuntimeError(
-                f'The versjon tool requires a version number '
-                'in the {from_path}. Add one to conf.py or pass '
-                'it to sphinx build using "-D version=X.Y.Z".')
-
-        # We rebuild the dictionary from scratch to avoid inconsistencies
-        # from previous runs
-        versjon = {
-            'format': 1, 'current': current, 'semver': [], 'other': []}
-
-        for to_path in builds:
-            print(f"{from_path.parents[1]} => {to_path.parents[1]}")
-
-            # Get the version we are "pointing" to
-            version = current_version(to_path)
-
-            # We want the relative path from the build directory containing
-            # the environement.pickle. Which should be in:
-            #
-            #    build/.doctrees/environement.pickle
-            #
-            # We want the obtain:
-            #
-            #    build/
-            #
-            path = pathlib.Path(os.path.relpath(
-                path=to_path.parents[1], start=from_path.parents[1])).as_posix()
-
-            # Store the version and its path in the all section
-            if semver.validate(version):
-
-                versjon['semver'].append(
-                    {'version': version, 'path': path})
-
-            else:
-
-                versjon['other'].append(
-                    {'version': version, 'path': path})
-
-        # Sort all versions
-        versjon['semver'] = sorted(
-            versjon['semver'], key=lambda v: semver.Version(v['version']),
-            reverse=True)
-
-        versjon['other'] = sorted(
-            versjon['other'], key=lambda v: v['version'])
-
-        rewrite_html(path=from_path, versjon=versjon)
-
-
-def current_version(objects_file):
+def current_version(build_dir):
     """ Return the current version of an objects.inv file"""
-    inv = sphobjinv.Inventory(objects_file)
 
-    print(inv.json_dict())
+    objects_file = build_dir.joinpath('objects.inv')
 
-    return inv.version
+    inventory = sphobjinv.Inventory(objects_file)
+
+    if not inventory.version:
+        raise RuntimeError(
+            f'The versjon tool requires a version number '
+            'in the {objects_file.parent}. Add one to conf.py or pass '
+            'it to sphinx build using "-D version=X.Y.Z".')
+
+    return inventory.version
+
+
+def find_builds(docs_dir):
+    """ Find all the available Sphinx builds in the documentation directory.
+
+    We basically look for an file created by all Sphinx builds called:
+    objects.inv
+
+    :param docs_dir: The base directory contaning all the built docs
+    :return: A list of pathlib.Path objects containing the path to each
+        found build directory
+    """
+    return [build.parent for build in docs_dir.glob('**/objects.inv')]
+
+
+def posix_path(from_dir, to_dir):
+    """ Return the relative path between two directories """
+    return pathlib.Path(os.path.relpath(path=to_dir, start=from_dir)).as_posix()
+
+
+def create_context(docs_dir, from_build, to_builds):
+    """ Create the context dictionary for a specific build
+
+    See the README for the format.
+    """
+
+    current = current_version(from_build)
+
+    # We rebuild the dictionary from scratch to avoid inconsistencies
+    # from previous runs
+    context = {
+        'current': current,
+        'is_semver': semver.validate(current),
+        'stable': None,
+        'semver': [],
+        'other': [],
+        'docs_path': {},
+        'docs_root': None
+    }
+
+    for to_build in to_builds:
+        print(f"Linking: {from_build} => {to_build}")
+
+        # Get the version we are "pointing" to
+        version = current_version(to_build)
+        path = posix_path(from_dir=docs_dir, to_dir=to_build)
+
+        # Store the version and its path in the all section
+        context['docs_path'][version] = path
+
+        if semver.validate(version):
+            context['semver'].append(version)
+
+        else:
+            context['other'].append(version)
+
+    # Sort all versions
+    context['semver'] = sorted(
+        context['semver'], key=lambda v: semver.Version(v), reverse=True)
+
+    # Mark current stable release
+    if context['semver']:
+        context['stable'] = context['semver'][0]
+
+    # Sort the non-semver versions
+    context['other'] = sorted(context['other'])
+
+    # Make sure that the master is listed first if in list
+    context['other'] = sorted(context['other'], key=lambda v: v != 'master')
+
+    return context
 
 
 def run(docs_path):
@@ -190,47 +113,53 @@ def run(docs_path):
     print(f'Running in {docs_path.resolve()}')
 
     # Get all the Sphinx builds in the the path
-    builds = list(docs_path.glob('**/objects.inv'))
+    builds = find_builds(docs_dir=docs_path)
     print(builds)
 
-    # Get the HTML to inject
-    template_path = os.path.join(
-        os.path.dirname(__file__), 'templates')
-
-    style_path = os.path.join(template_path, 'style.html')
-    versjon_path = os.path.join(template_path, 'versjon.html')
-
-    with open(style_path) as style_file:
-        style_data = style_file.read()
-
-    with open(versjon_path) as versjon_file:
-        versjon_data = versjon_file.read()
+    # Our jinja2 template rendere use to geneate the HTML
+    inject_render = template_render.TemplateRender(user_path=None)
 
     for build in builds:
         version = current_version(build)
         print(version)
 
-        html_pages = list(build.parent.glob('**/*.html'))
-        print(html_pages)
+        html_pages = list(build.glob('**/*.html'))
+
+        context = create_context(
+            docs_dir=docs_path, from_build=build, to_builds=builds)
 
         for html_page in html_pages:
 
-            with open(html_page) as html_file:
+            context['docs_root'] = posix_path(
+                from_dir=html_page.parent, to_dir=docs_path) + '/'
+
+            print(f"context => {context}")
+
+            # Get the HTML to inject
+            selector_data = inject_render.render(
+                template_file='selector.html', context=context)
+
+            style_data = inject_render.render(
+                template_file='style.html', context={})
+
+            warning_data = inject_render.render(
+                template_file='warning.html', context=context)
+
+            # Get the HTML for each page
+            with open(html_page, 'r') as html_file:
                 html_data = html_file.read()
 
-            # print(html_data)
-
-            page = bs4.BeautifulSoup(html_data, features="html.parser")
             style = bs4.BeautifulSoup(style_data, features="html.parser")
-            versjon = bs4.BeautifulSoup(versjon_data, features="html.parser")
+            selector = bs4.BeautifulSoup(selector_data, features="html.parser")
+            warning = bs4.BeautifulSoup(warning_data, features="html.parser")
+            page = bs4.BeautifulSoup(html_data, features="html.parser")
 
-            # print(page.html())
-
+            # Inject the HTML fragments in the .html page
             page.head.append(style)
-            page.body.extend(versjon)
+            page.body.append(selector)
+            page.body.insert(0, warning)
 
-            print(page)
+            print(f'Writing => {html_page}')
 
             with open(html_page, 'w') as html_file:
                 html_file.write(str(page))
-            # print(html_data)

@@ -1,0 +1,13 @@
+{% if context["stable"] %}
+{% if context["stable"] != context["current"]  %}
+{% set stable = context["stable"] %}
+{% set stable_path = context["docs_root"] + context["docs_path"][stable] %}
+{% if context["is_semver"]  %}
+<p class="version-old-warning"><strong>Warning:</strong> This is an old version. The latest stable version is <a
+                href="{{ stable_path }}">Version {{ stable }}</a>.</p>
+{% else %}
+<p class="version-dev-warning"><strong>Warning:</strong> This is a development version. The latest stable version is <a
+                href="{{ stable_path }}">Version {{ stable }}</a>.</p>
+{% endif %}
+{% endif %}
+{% endif %}

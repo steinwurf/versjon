@@ -31,11 +31,14 @@
     }
 
     .content {
-        padding: 0 18px;
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.2s ease-out;
         background-color: #f1f1f1;
+    }
+
+    .content-inner {
+        padding: 10px 18px
     }
 
     #versjon-overlay {
@@ -43,6 +46,50 @@
         bottom: 50px;
         right: 10px;
         width: 250px;
+    }
+
+    p.version-old-warning {
+        margin: 10px 0;
+        padding: 5px 10px;
+        border-radius: 4px;
+
+        letter-spacing: 1px;
+        color: #fff;
+        text-shadow: 0 0 2px #000;
+        text-align: center;
+
+        background: #d40 repeating-linear-gradient(135deg,
+                transparent,
+                transparent 56px,
+                rgba(255, 255, 255, 0.2) 56px,
+                rgba(255, 255, 255, 0.2) 112px);
+    }
+
+    p.version-old-warning a {
+        color: #fff;
+        border-color: #fff;
+    }
+
+    p.version-dev-warning {
+        margin: 10px 0;
+        padding: 5px 10px;
+        border-radius: 4px;
+
+        letter-spacing: 1px;
+        color: #fff;
+        text-shadow: 0 0 2px #000;
+        text-align: center;
+
+        background: #E67300 repeating-linear-gradient(135deg,
+                transparent,
+                transparent 56px,
+                rgba(255, 255, 255, 0.2) 56px,
+                rgba(255, 255, 255, 0.2) 112px);
+    }
+
+    p.version-dev-warning a {
+        color: #fff;
+        border-color: #fff;
     }
 </style>
 <link rel="stylesheet" type="text/css"

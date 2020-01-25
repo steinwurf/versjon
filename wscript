@@ -85,10 +85,15 @@ def _pytest(bld, venv):
     if os.path.exists(basetemp):
         waflib.extras.wurf.directory.remove_directory(path=basetemp)
 
-    testdir = bld.path.find_node('test')
+    # Run all tests by just passing the test directory. Specific tests can
+    # be enabled by specifying the full path e.g.:
+    #
+    #     'test/test_run.py::test_create_context
+    #
+    test_filter = 'test'
 
     # Main test command
-    venv.run(f'python -B -m pytest {testdir.abspath()} --basetemp {basetemp}')
+    venv.run(f'python -B -m pytest {test_filter} --basetemp {basetemp}')
 
     # Check the package
     venv.run(f'twine check {wheel}')

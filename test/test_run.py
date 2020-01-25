@@ -5,7 +5,10 @@ import os
 import json
 import pytest
 import sphinx
+import pathlib
 import pytest_testdirectory
+
+import versjon.versjon_tool
 
 
 def _test_run(testdirectory, datarecorder):
@@ -23,6 +26,9 @@ def _test_run(testdirectory, datarecorder):
 
     project_dir.run(
         'sphinx-build --no-color -vvv -b html . -D version=master build_master')
+
+    project_dir.run(
+        'sphinx-build --no-color -vvv -b html . -D version=abc build_abc')
 
     r = project_dir.run('versjon')
     print(r)
@@ -59,7 +65,7 @@ def _test_run_no_version(testdirectory):
         '*The versjon extension requires a version number*')
 
 
-def test_run(testdirectory, datarecorder):
+def setup_project(testdirectory):
 
     project_dir = testdirectory.copy_dir(directory="test/data/test_project")
 
@@ -75,6 +81,50 @@ def test_run(testdirectory, datarecorder):
     project_dir.run(
         'sphinx-build --no-color -vvv -b html . -D version=master build_master')
 
-    r = project_dir.run('versjon')
+    project_dir.run(
+        'sphinx-build --no-color -vvv -b html . -D version=abc build_abc')
+
+    return project_dir
+
+
+def test_run(testdirectory, datarecorder):
+
+    project_dir = setup_project(testdirectory)
+
+    r = project_dir.run('versjon -v')
     print(r)
     assert 0
+
+
+def test_create_context(testdirectory, datarecorder):
+
+    project_dir = setup_project(testdirectory)
+
+    docs_path = pathlib.Path(project_dir.path())
+
+    builds = versjon.versjon_tool.find_builds(docs_dir=docs_path)
+
+    for build in builds:
+
+        context = versjon.versjon_tool.create_context(
+            docs_dir=docs_path, from_build=build, to_builds=builds)
+
+        datarecorder.record_data(
+            data=context,
+            recording_file=f'test/recordings/context_{build.name}.json')
+
+
+def test_find_builds(testdirectory, datarecorder):
+
+    project_dir = setup_project(testdirectory)
+    docs_dir = pathlib.Path(project_dir.path())
+
+    builds = versjon.versjon_tool.find_builds(docs_dir=docs_dir)
+
+    # Make the relative for the recording
+    paths = [versjon.versjon_tool.posix_path(
+        docs_dir, build) for build in builds]
+
+    datarecorder.record_data(
+        data=paths,
+        recording_file=f'test/recordings/find_builds.json')

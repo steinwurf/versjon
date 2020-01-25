@@ -141,3 +141,23 @@ by Sphinx when building our documents.
 
 We make the following assumptions the ``.doctree`` directory containing
 the
+
+
+The ``context``
+---------------
+
+In the templates you can access the information gathered by versjon via the
+``context`` dictionary. Based on this you can generate the needed HTML.
+
+The following is an example of a context::
+
+    context = {
+        "current": "2.0.0",
+        "is_semver": true,
+        "stable": "2.0.0",
+        "semver": ["2.0.0", "1.1.0", "1.0.0"],
+        "other": ["master", "abc"],
+        "docs_path": { "2.0.0": "build_2.0.0", "1.1.0": "build_1.0.0", ...},
+        "docs_root": "../"
+    }
+
