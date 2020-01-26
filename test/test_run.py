@@ -93,7 +93,6 @@ def test_run(testdirectory, datarecorder):
 
     r = project_dir.run('versjon -v')
     print(r)
-    assert 0
 
 
 def test_create_context(testdirectory, datarecorder):

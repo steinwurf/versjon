@@ -30,7 +30,7 @@ def test_template_render(datarecorder):
     template_render = versjon.template_render.TemplateRender(user_path=None)
 
     result = template_render.render(
-        template_file='selector.html', context=context)
+        template_file='footer.html', context=context)
 
     datarecorder.record_data(
-        data=result, recording_file='test/recordings/selector.html')
+        data=result, recording_file='test/recordings/footer.html')

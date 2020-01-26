@@ -136,28 +136,29 @@ def run(docs_path):
             print(f"context => {context}")
 
             # Get the HTML to inject
-            selector_data = inject_render.render(
-                template_file='selector.html', context=context)
+            head_data = inject_render.render(
+                template_file='head.html', context={})
 
-            style_data = inject_render.render(
-                template_file='style.html', context={})
+            header_data = inject_render.render(
+                template_file='header.html', context=context)
 
-            warning_data = inject_render.render(
-                template_file='warning.html', context=context)
+            footer_data = inject_render.render(
+                template_file='footer.html', context=context)
 
             # Get the HTML for each page
             with open(html_page, 'r') as html_file:
                 html_data = html_file.read()
 
-            style = bs4.BeautifulSoup(style_data, features="html.parser")
-            selector = bs4.BeautifulSoup(selector_data, features="html.parser")
-            warning = bs4.BeautifulSoup(warning_data, features="html.parser")
+            head = bs4.BeautifulSoup(head_data, features="html.parser")
+            header = bs4.BeautifulSoup(header_data, features="html.parser")
+            footer = bs4.BeautifulSoup(footer_data, features="html.parser")
             page = bs4.BeautifulSoup(html_data, features="html.parser")
 
             # Inject the HTML fragments in the .html page
-            page.head.append(style)
-            page.body.append(selector)
-            page.body.insert(0, warning)
+            page.head.append(head)
+
+            page.body.insert(0, header)
+            page.body.append(footer)
 
             print(f'Writing => {html_page}')
 
