@@ -34,12 +34,12 @@ class TemplateRender(object):
             # https://stackoverflow.com/a/39858522/1717320
             extensions=['jinja2.ext.do'])
 
-    def render(self, template_file, context):
+    def render(self, template_file, **kwargs):
         """ Render the template
 
         :param template_file: The filename of the template to render
-        :param context: Dictionary containing the context information
+        :param kwargs: Keyword arguments containing the context information
         """
 
         template = self.environment.get_template(name=template_file)
-        return template.render(context=context)
+        return template.render(**kwargs)

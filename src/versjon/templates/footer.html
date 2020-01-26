@@ -1,30 +1,30 @@
 {# FORMAT_VERSION #}
 
-{% macro format_version(current, build) %}
-{% set build_path = context["docs_root"] + context["docs_path"][build] %}
-{% if current == build %}
+{% macro format_version(version) %}
+{% set version_path = docs_root + docs_path[version] %}
+{% if current == version %}
 <strong>
-    <dd><a href="{{ build_path }}">{{ build }}</a></dd>
+    <dd><a href="{{ version_path }}">{{ version }}</a></dd>
 </strong>
 {% else %}
-<dd><a href="{{ build_path }}">{{ build }}</a></dd>
+<dd><a href="{{ version_path }}">{{ version }}</a></dd>
 {% endif %}
 {% endmacro %}
 
 <div id="versjon-overlay">
-    <button type="button" class="versjon"><i class="fa fa-book"></i> Version: {{context["current"]}}</button>
+    <button type="button" class="versjon"><i class="fa fa-book"></i> Version: {{current}}</button>
     <div class="content">
         <div class="content-inner">
             <dl>
                 <dt>Versions</dt>
-                {% for semver in context["semver"]%}
-                {{ format_version(context["current"], semver) | indent(16) }}
+                {% for version in semver %}
+                {{ format_version(version) | indent(16) }}
                 {% endfor %}
             </dl>
             <dl>
                 <dt>Development</dt>
-                {% for other in context["other"]%}
-                {{ format_version(context["current"], other) | indent(16) }}
+                {% for version in other %}
+                {{ format_version(version) | indent(16) }}
                 {% endfor %}
             </dl>
         </div>

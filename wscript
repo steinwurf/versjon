@@ -88,7 +88,7 @@ def _pytest(bld, venv):
     # Run all tests by just passing the test directory. Specific tests can
     # be enabled by specifying the full path e.g.:
     #
-    #     'test/test_run.py::test_create_context
+    #     'test/test_run.py::test_create_context'
     #
     test_filter = 'test'
 

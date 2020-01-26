@@ -7,10 +7,16 @@ Introduction
 .. image:: https://travis-ci.org/steinwurf/versjon.svg?branch=master
     :target: https://travis-ci.org/steinwurf/versjon
 
-A Sphinx extension and tool for linking muiltiple versions of your project's
-documentation (without the need for special services such as readthedocs.org).
+What it is:
 
-Useful if you build and host your documentation as a static site.
+* A tool for linking muiltiple versions of your project's Sphinx
+  documentation (without the need for special services such as readthedocs.org).
+* Useful if you build and host your documentation as a static site.
+
+How it works:
+
+* ``versjon`` works by injecting some basic HTML in to the generated
+  documentation.
 
 Installation
 ------------
@@ -19,32 +25,10 @@ Installation
 
       python -m pip install versjon
 
-2. Register the Sphinx extension in your project's Sphinx configuration stored in
-   ``conf.py``::
-
-       ...
-       extensions = ['versjon']
-       ...
-
-3. Add the ``versjon.html`` template to the HTML sidebar, this is done by
-   adding/modifying the ``html_sidebars`` option in Sphinx's ``conf.py``.
-
-   Exampel::
-
-       html_sidebars = {'**': ['globaltoc.html', 'searchbox.html', 'versjon.html']}
-
-   If you want to customize how the versions are presented in HTML e.g. adapt
-   them to your theme see the customization section.
-
-
 Building the docs
 -----------------
 
-1. Make sure you have the ``versjon`` extension installed
-   (in Sphinx's ``conf.py``)for all the versions of your documentation where you
-   want to use ``versjon``.
-
-2. Build all the different versions of your documentation into a common
+1. Build all the different versions of your documentation into a common
    directory. For example generating all the docs in the ``site`` directory::
 
        git checkout 2.0.0
@@ -61,103 +45,65 @@ Building the docs
    If you have the specified the ``version`` number in ``conf.py`` you can omit
    the ``-D version`` option to Sphinx build.
 
-3. Run ``versjon`` in the common diretory - and you are done.
+2. Run ``versjon`` in the common diretory - and you are done.
 
-Customization
--------------
-You can provide you own template for generating the version selector.
+Stable index
+------------
 
-The easiest way is probably to copy the default ``src/templates/versjon.html``
-one and adapt it. To use your own templates in Sphinx you need to add the
-following to ``conf.py``::
-
-    templates_path = ['docs/mytemplate']
-
-Also you need to add the template e.g. to the ``html_sidebars`` list.
-
-The `versjon.json` format
--------------------------
-
-The ``versjon.json`` contains information about the different versions
-generated. When you add the ``versjon`` extension to your Sphinx ``conf.py``
-an initial ``versjon.json`` file will be generated everytime you build
-your project.
-
-As an example the initial versjon.json file could contain the following
-information::
-
-    {
-        'format': 1,
-        'current': '5.1.2',
-        'semver': [
-            {'version': '5.1.2', 'path': '.'}
-        ],
-        'other': [
-        ]
-    }
-
-There are three keys:
-
-* ``format``: This is the version of the ``versjon`` JSON format :) It allows
-  the ``verjson`` tool to output JSON that is compatible with older versions (
-  we don't do that atm. but now we have the mechanism).
-* ``current``: This is the actual project version specified the Sphinx
-  configuration: https://www.sphinx-doc.org/en/master/usage/configuration.html
-* ``semver``: This contains a list of all ``versjon`` generated versions matching
-  the semantic versioning scheme and a relative path to them (useful for
-  generating links in the documentation).
-
-  Inside the list we have a dictionary contaning ``version`` and ``path`` keys.
-  The list is sorted such that non-semver versions appear first followed by
-  semver versions (newest first).
-* ``other``: This is all the versions that do not match semantic versioning.
-  The list contains the same dictionary as the ``semver`` list.
-
-After running ``sphinx-build`` on the versions you want to have included,
-the ``versjon`` tool can traverse the folders and update the ``versjon.json``
-file with links to the additional versions.
-
-As an example after running the ``versjon`` tool a ``versjon.json`` file could
-look something like::
-
-    {
-        'format': 1,
-        'current': '1.0.0',
-        'semver': [
-            {'version': '2.0.0', 'path': '../2.0.0'}
-            {'version': '1.0.0', 'path': '.'},
-        ],
-        'other': [
-            {'version': 'latest', 'path': '../latest'}
-        ]
-    }
-
-
-Sphinx integration
-------------------
-
-We integrate with Sphinx by looking for the ``environment.pickle`` saved
-by Sphinx when building our documents.
-
-We make the following assumptions the ``.doctree`` directory containing
-the
+As default ``versjon`` will generate a folder in the documentaiton root called
+``stable``. This folder will contain an ``index.html`` with a redirect to the
+latest stable version. You can disable thie behaviour with ``--no-stable-index``
+option.
 
 
 The ``context``
 ---------------
 
-In the templates you can access the information gathered by versjon via the
-``context`` dictionary. Based on this you can generate the needed HTML.
+In the templates you can access the information gathered by versjon. Based on
+this you can generate the needed HTML.
 
-The following is an example of a context::
+The following lists the various variables.
 
-    context = {
-        "current": "2.0.0",
-        "is_semver": true,
-        "stable": "2.0.0",
-        "semver": ["2.0.0", "1.1.0", "1.0.0"],
-        "other": ["master", "abc"],
-        "docs_path": { "2.0.0": "build_2.0.0", "1.1.0": "build_1.0.0", ...},
-        "docs_root": "../"
-    }
+General variables
+.................
 
+* ``semver``: A list of versions with valid sematic version numbers.
+* ``other``: A list of versions with non semantic version numbers. Typically
+  this list will contain branches etc.
+* ``stable``: If we have any semantic version releases the ``stable`` version
+  will be the newest release in the ``semver`` list.
+* ``docs_path``: Dictionary mapping versions to the build folder for a version
+  relative to the documentation root.
+
+Build variables
+...............
+
+* ``current``: The current version
+* ``is_semver``: True if the current version follows semantic versioning
+
+Page variables
+..............
+
+* ``docs_root``: Relative path to the documentation root from a given HTML page.
+  Concatenating the ``docs_root`` with a path in ``docs_path`` will give a
+  valid relative link from one HTML page to the root folder of specific version.
+
+Customization
+-------------
+You can provide you own template for generating the version selector etc.
+
+The easiest way is probably to copy one of the default HTML templates e.g.
+``src/templates/footer.html`` one and adapt it.
+
+If you want ot "inject" a custom footer. Create a file called ``footer.html``
+and put it somewhere in your project e.g. ``mydocs/footer.html`` now invoke
+``versjon`` with the ``--user_templates`` argument e.g.::
+
+    ./versjon --user_templates=mydocs
+
+``verjson`` will prioritize finding templates in the users path first. If non
+is found it will fallback to the built-in.
+
+If you want to disable a built-in template, simply create an empty file with
+the same name as the template you want to disable e.g. ``header.html`` if
+the template is empty no content will be injected.

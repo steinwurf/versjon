@@ -49,32 +49,26 @@ def posix_path(from_dir, to_dir):
     return pathlib.Path(os.path.relpath(path=to_dir, start=from_dir)).as_posix()
 
 
-def create_context(docs_dir, from_build, to_builds):
-    """ Create the context dictionary for a specific build
+def general_context(docs_dir, builds):
+    """ Create the general context dictionary
 
     See the README for the format.
     """
 
-    current = current_version(from_build)
-
     # We rebuild the dictionary from scratch to avoid inconsistencies
     # from previous runs
     context = {
-        'current': current,
-        'is_semver': semver.validate(current),
         'stable': None,
         'semver': [],
         'other': [],
         'docs_path': {},
-        'docs_root': None
     }
 
-    for to_build in to_builds:
-        print(f"Linking: {from_build} => {to_build}")
+    for build in builds:
 
         # Get the version we are "pointing" to
-        version = current_version(to_build)
-        path = posix_path(from_dir=docs_dir, to_dir=to_build)
+        version = current_version(build)
+        path = posix_path(from_dir=docs_dir, to_dir=build)
 
         # Store the version and its path in the all section
         context['docs_path'][version] = path
@@ -102,7 +96,7 @@ def create_context(docs_dir, from_build, to_builds):
     return context
 
 
-def run(docs_path):
+def run(docs_path, no_stable_index, user_templates):
     """ Run the versjon tool.
 
     :param docs_path: The path to the documentation as a string
@@ -117,33 +111,42 @@ def run(docs_path):
     print(builds)
 
     # Our jinja2 template rendere use to geneate the HTML
-    inject_render = template_render.TemplateRender(user_path=None)
+    inject_render = template_render.TemplateRender(user_path=user_templates)
+
+    # Get the general context
+    context = general_context(docs_dir=docs_path, builds=builds)
 
     for build in builds:
-        version = current_version(build)
-        print(version)
 
-        html_pages = list(build.glob('**/*.html'))
+        current = current_version(build)
 
-        context = create_context(
-            docs_dir=docs_path, from_build=build, to_builds=builds)
+        # Build context
+        build_context = {
+            'current': current,
+            'is_semver': semver.validate(current)
+        }
 
-        for html_page in html_pages:
+        for html_page in build.glob('**/*.html'):
 
-            context['docs_root'] = posix_path(
-                from_dir=html_page.parent, to_dir=docs_path) + '/'
+            # Page context
+            page_context = {
+                'docs_root': posix_path(
+                    from_dir=html_page.parent, to_dir=docs_path) + '/'
+            }
 
-            print(f"context => {context}")
+            print(f"context => {context}, {build_context}, {page_context}")
 
             # Get the HTML to inject
             head_data = inject_render.render(
-                template_file='head.html', context={})
+                template_file='head.html')
 
             header_data = inject_render.render(
-                template_file='header.html', context=context)
+                template_file='header.html', **context, **build_context,
+                **page_context)
 
             footer_data = inject_render.render(
-                template_file='footer.html', context=context)
+                template_file='footer.html', **context, **build_context,
+                **page_context)
 
             # Get the HTML for each page
             with open(html_page, 'r') as html_file:
@@ -164,3 +167,28 @@ def run(docs_path):
 
             with open(html_page, 'w') as html_file:
                 html_file.write(str(page))
+
+    if no_stable_index and context['stable']:
+        # We are pragmatic here and we bail if no stable version exist. We could
+        # ask the user
+
+        stable_dir = docs_path.joinpath('stable')
+
+        if stable_dir.is_dir():
+            # We assume no stable version has been generated if so, we should
+            # not do it
+            raise RuntimeError("stable directory already exists!")
+
+        stable_dir.mkdir()
+
+        # Page context
+        page_context = {
+            'docs_root': '../'
+        }
+
+        index_data = inject_render.render(
+            template_file='stable_index.html', **context, **page_context)
+
+        # Get the HTML for each page
+        with open(stable_dir.joinpath('index.html'), 'w') as index_html:
+            index_html.write(index_data)
