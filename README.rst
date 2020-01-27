@@ -18,6 +18,11 @@ How it works:
 * ``versjon`` works by injecting some basic HTML in to the generated
   documentation.
 
+Demonstration
+-------------
+
+.. image:: demo.giv
+
 Installation
 ------------
 
