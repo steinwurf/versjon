@@ -1,0 +1,43 @@
+
+
+<div id="versjon-overlay">
+    <button type="button" class="versjon"><i class="fa fa-book"></i> Version: 1.1.0</button>
+    <div class="versjon-content">
+        <div class="versjon-content-inner">
+            <dl>
+                <dt>Versions</dt>
+                <dd><a href="../build_2.0.0">2.0.0</a></dd>
+
+                <strong>
+                    <dd><a href="../build_1.1.0">1.1.0</a></dd>
+                </strong>
+
+                <dd><a href="../build_1.0.0">1.0.0</a></dd>
+
+            </dl>
+            <dl>
+                <dt>Development</dt>
+                <dd><a href="../build_master">master</a></dd>
+
+                <dd><a href="../build_abc">abc</a></dd>
+
+            </dl>
+        </div>
+    </div>
+</div>
+<script>
+    var coll = document.getElementsByClassName("versjon");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+    }
+</script>
