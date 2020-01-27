@@ -5,10 +5,13 @@ import os
 import json
 import pytest
 import sphinx
+import pathlib
 import pytest_testdirectory
 
+import versjon.versjon_tool
 
-def test_run(testdirectory, datarecorder):
+
+def setup_project(testdirectory):
 
     project_dir = testdirectory.copy_dir(directory="test/data/test_project")
 
@@ -24,36 +27,47 @@ def test_run(testdirectory, datarecorder):
     project_dir.run(
         'sphinx-build --no-color -vvv -b html . -D version=master build_master')
 
-    r = project_dir.run('versjon')
+    project_dir.run(
+        'sphinx-build --no-color -vvv -b html . -D version=abc build_abc')
+
+    return project_dir
+
+
+def test_run(testdirectory, datarecorder):
+
+    project_dir = setup_project(testdirectory)
+
+    r = project_dir.run('versjon -v')
     print(r)
 
-    def record_json(project_dir, build_dir):
 
-        json_file = os.path.join(project_dir.path(), build_dir, 'versjon.json')
+def test_create_general_context(testdirectory, datarecorder):
 
-        assert os.path.isfile(json_file)
+    project_dir = setup_project(testdirectory)
 
-        recording_file = os.path.join(
-            'test', 'recordings', build_dir + '_versjon.json')
+    docs_path = pathlib.Path(project_dir.path())
 
-        datarecorder.record_file(
-            data_file=json_file, recording_file=recording_file)
+    builds = versjon.versjon_tool.find_builds(docs_dir=docs_path)
 
-    record_json(project_dir=project_dir, build_dir='build_1.0.0')
-    record_json(project_dir=project_dir, build_dir='build_1.1.0')
-    record_json(project_dir=project_dir, build_dir='build_2.0.0')
-    record_json(project_dir=project_dir, build_dir='build_master')
+    context = versjon.versjon_tool.create_general_context(
+        docs_dir=docs_path, builds=builds)
+
+    datarecorder.record_data(
+        data=context,
+        recording_file=f'test/recordings/general_context.json')
 
 
-def test_run_no_version(testdirectory):
+def test_find_builds(testdirectory, datarecorder):
 
-    project = testdirectory.copy_dir(directory="test/data/test_project")
+    project_dir = setup_project(testdirectory)
+    docs_dir = pathlib.Path(project_dir.path())
 
-    with pytest.raises(pytest_testdirectory.runresulterror.RunResultError) as error:
-        project.run('sphinx-build --no-color -vvv -b html . build')
+    builds = versjon.versjon_tool.find_builds(docs_dir=docs_dir)
 
-    print(error.value.runresult)
+    # Make the relative for the recording
+    paths = [versjon.versjon_tool.posix_path(
+        docs_dir, build) for build in builds]
 
-    # Check if our error is somewhere in the output
-    assert error.value.runresult.stderr.match(
-        '*The versjon extension requires a version number*')
+    datarecorder.record_data(
+        data=sorted(paths),
+        recording_file=f'test/recordings/find_builds.json')

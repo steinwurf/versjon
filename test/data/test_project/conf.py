@@ -38,7 +38,7 @@ release = u''
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['versjon']
+#extensions = ['versjon']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = []  # ['_templates']
@@ -94,7 +94,7 @@ html_static_path = []  # ['_static']
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
 #
-html_sidebars = {'**': ['globaltoc.html', 'searchbox.html', 'versjon.html']}
+#html_sidebars = {'**': ['globaltoc.html', 'searchbox.html']}
 
 
 # -- Options for HTMLHelp output ---------------------------------------------

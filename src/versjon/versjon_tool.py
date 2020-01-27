@@ -5,72 +5,193 @@
 import json
 import os
 import pathlib
+import pickle
+import sphobjinv
+import bs4
+import functools
+
 import semantic_version as semver
 
-
-def current_version(versjon_path):
-    """ Return the current version of a versjon.json file"""
-    with open(versjon_path) as json_file:
-        data = json.load(json_file)
-        return data['current']
+from . import template_render
 
 
-def run(docs_path):
+def current_version(build_dir):
+    """ Return the current version of an objects.inv file"""
+
+    objects_file = build_dir.joinpath('objects.inv')
+
+    inventory = sphobjinv.Inventory(objects_file)
+
+    if not inventory.version:
+        raise RuntimeError(
+            f'The versjon tool requires a version number '
+            'in the {objects_file.parent}. Add one to conf.py or pass '
+            'it to sphinx build using "-D version=X.Y.Z".')
+
+    return inventory.version
+
+
+def find_builds(docs_dir):
+    """ Find all the available Sphinx builds in the documentation directory.
+
+    We basically look for an file created by all Sphinx builds called:
+    objects.inv
+
+    :param docs_dir: The base directory contaning all the built docs
+    :return: A list of pathlib.Path objects containing the path to each
+        found build directory
+    """
+    return [build.parent for build in docs_dir.glob('**/objects.inv')]
+
+
+def posix_path(from_dir, to_dir):
+    """ Return the relative path between two directories """
+    return pathlib.Path(os.path.relpath(path=to_dir, start=from_dir)).as_posix()
+
+
+def create_general_context(docs_dir, builds):
+    """ Create the general context dictionary
+
+    See the README for the format.
+    """
+
+    # We rebuild the dictionary from scratch to avoid inconsistencies
+    # from previous runs
+    context = {
+        'stable': None,
+        'semver': [],
+        'other': [],
+        'docs_path': {},
+    }
+
+    for build in builds:
+
+        # Get the version we are "pointing" to
+        version = current_version(build)
+        path = posix_path(from_dir=docs_dir, to_dir=build)
+
+        # Store the version and its path in the all section
+        context['docs_path'][version] = path
+
+        if semver.validate(version):
+            context['semver'].append(version)
+
+        else:
+            context['other'].append(version)
+
+    # Sort all versions
+    context['semver'] = sorted(
+        context['semver'], key=lambda v: semver.Version(v), reverse=True)
+
+    # Mark current stable release
+    if context['semver']:
+        context['stable'] = context['semver'][0]
+
+    # Sort the non-semver versions
+    context['other'] = sorted(context['other'])
+
+    # Make sure that the master is listed first if in list
+    context['other'] = sorted(context['other'], key=lambda v: v != 'master')
+
+    return context
+
+
+def run(docs_path, no_stable_index, user_templates):
     """ Run the versjon tool.
 
     :param docs_path: The path to the documentation as a string
     """
-    print(f'Running in {docs_path}')
-
     # Transform to Path
     docs_path = pathlib.Path(docs_path)
 
-    # Get all the versjon.json in the the path
-    versjons = list(docs_path.glob('**/versjon.json'))
+    print(f'Running in {docs_path.resolve()}')
 
-    if not versjons:
-        raise RuntimeError(f'No versjon.json files found in {docs_path}.')
+    # Get all the Sphinx builds in the the path
+    builds = find_builds(docs_dir=docs_path)
+    print(builds)
 
-    # For each path visit all other paths
-    for from_path in versjons:
+    # Our jinja2 template rendere use to geneate the HTML
+    inject_render = template_render.TemplateRender(user_path=user_templates)
 
-        # Get the current version
-        current = current_version(from_path)
+    # Get the general context
+    general_context = create_general_context(docs_dir=docs_path, builds=builds)
 
-        # We rebuild the json file from scratch to avoid inconsistencies if
-        # the verjson.json files contain information from previous runs
-        versjon_json = {
-            'format': 1, 'current': current, 'semver': [], 'other': []}
+    for build in builds:
 
-        for to_path in versjons:
-            print(f"{from_path.parent} => {to_path.parent}")
+        current = current_version(build)
 
-            # Get the version we are "pointing" to
-            version = current_version(to_path)
+        # Build context
+        build_context = {
+            'current': current,
+            'is_semver': semver.validate(current)
+        }
 
-            # We want the relative path from the directory containing the
-            # versjon.json not the verjson.json file itself.
-            path = pathlib.Path(os.path.relpath(
-                path=to_path.parent, start=from_path.parent)).as_posix()
+        for html_page in build.glob('**/*.html'):
 
-            # Store the version and its path in the all section
-            if semver.validate(version):
+            # Page context
+            page_context = {
+                'page_root': posix_path(
+                    from_dir=html_page.parent, to_dir=docs_path) + '/'
+            }
 
-                versjon_json['semver'].append(
-                    {'version': version, 'path': path})
+            print(
+                f"context => {general_context}, {build_context}, {page_context}")
 
-            else:
+            # Get the HTML to inject
+            head_data = inject_render.render(
+                template_file='head.html', **general_context,
+                **build_context, **page_context)
 
-                versjon_json['other'].append(
-                    {'version': version, 'path': path})
+            header_data = inject_render.render(
+                template_file='header.html', **general_context,
+                **build_context, **page_context)
 
-        # Sort all versions
-        versjon_json['semver'] = sorted(
-            versjon_json['semver'], key=lambda v: semver.Version(v['version']),
-            reverse=True)
+            footer_data = inject_render.render(
+                template_file='footer.html', **general_context,
+                **build_context, **page_context)
 
-        versjon_json['other'] = sorted(
-            versjon_json['other'], key=lambda v: v['version'])
+            # Get the HTML for each page
+            with open(html_page, 'r') as html_file:
+                html_data = html_file.read()
 
-        with open(from_path, 'w') as json_file:
-            json.dump(versjon_json, json_file, indent=4, sort_keys=True)
+            head = bs4.BeautifulSoup(head_data, features="html.parser")
+            header = bs4.BeautifulSoup(header_data, features="html.parser")
+            footer = bs4.BeautifulSoup(footer_data, features="html.parser")
+            page = bs4.BeautifulSoup(html_data, features="html.parser")
+
+            # Inject the HTML fragments in the .html page
+            page.head.append(head)
+
+            page.body.insert(0, header)
+            page.body.append(footer)
+
+            print(f'Writing => {html_page}')
+
+            with open(html_page, 'w') as html_file:
+                html_file.write(str(page))
+
+    if not no_stable_index and general_context['stable']:
+        # We are pragmatic here and we bail if no stable version exist. We could
+        # ask the user
+
+        stable_dir = docs_path.joinpath('stable')
+
+        if stable_dir.is_dir():
+            # We assume no stable version has been generated if so, we should
+            # not do it
+            raise RuntimeError("stable directory already exists!")
+
+        stable_dir.mkdir()
+
+        # Page context
+        page_context = {
+            'page_root': '../'
+        }
+
+        index_data = inject_render.render(
+            template_file='stable_index.html', **general_context,
+            **page_context)
+
+        # Get the HTML for each page
+        with open(stable_dir.joinpath('index.html'), 'w') as index_html:
+            index_html.write(index_data)
