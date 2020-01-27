@@ -64,7 +64,8 @@ def _pytest(bld, venv):
     # will be generated from test/requirements.in
     if not os.path.isfile('test/requirements.txt'):
         venv.run('python -m pip install pip-tools')
-        venv.run('pip-compile test/requirements.in')
+        venv.run('pip-compile setup.py test/requirements.in '
+                 '--output-file test/requirements.txt')
 
     venv.run('python -m pip install -r test/requirements.txt')
 
