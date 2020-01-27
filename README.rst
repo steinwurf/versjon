@@ -21,7 +21,7 @@ How it works:
 Demonstration
 -------------
 
-.. image:: demo.giv
+.. image:: demo.gif
 
 Installation
 ------------
