@@ -13,7 +13,7 @@ def test_template_render(datarecorder):
             "abc": "build_abc",
             "master": "build_master"
         },
-        "docs_root": '../',
+        "page_root": '../',
         "is_semver": True,
         "other": [
             "master",

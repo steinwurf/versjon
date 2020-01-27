@@ -56,6 +56,45 @@ latest stable version. You can disable thie behaviour with ``--no-stable-index``
 option.
 
 
+Built in templates (injection)
+------------------------------
+
+``versjon`` ships with a couple of built-in templates, that get injected
+in the generated HTML:
+
+* ``head.html``: This template gets injected into the ``<head>`` tag of
+  the generated HTML pages. In this tempate you have access to the following
+  variables: ``general``, ``build``, ``page``.
+* ``header.html``: This template is inject at the beginning of the ``<body>``
+  tag. In this tempate you have access to the following variables:
+  ``general``, ``build``, ``page``.
+* ``footer.html``: This template is inject at the end of the ``<body>``
+  tag. In this tempate you have access to the following variables:
+  ``general``, ``build``, ``page``.
+* ``stable_index.html``: This template is use to generate an ``index.html``
+  in the ``stable`` folder.  In this tempate you have access to the
+  following variables: ``general``, ``page``.
+
+Customization
+-------------
+You can provide you own template for generating the version selector etc.
+
+The easiest way is probably to copy one of the default HTML templates e.g.
+``src/templates/footer.html`` one and adapt it.
+
+If you want ot "inject" a custom footer. Create a file called ``footer.html``
+and put it somewhere in your project e.g. ``mydocs/footer.html`` now invoke
+``versjon`` with the ``--user_templates`` argument e.g.::
+
+    ./versjon --user_templates=mydocs
+
+``verjson`` will prioritize finding templates in the users path first. If non
+is found it will fallback to the built-in.
+
+If you want to disable a built-in template, simply create an empty file with
+the same name as the template you want to disable e.g. ``header.html`` if
+the template is empty no content will be injected.
+
 The ``context``
 ---------------
 
@@ -84,26 +123,6 @@ Build variables
 Page variables
 ..............
 
-* ``docs_root``: Relative path to the documentation root from a given HTML page.
-  Concatenating the ``docs_root`` with a path in ``docs_path`` will give a
+* ``page_root``: Relative path to the documentation root from a given HTML page.
+  Concatenating the ``page_root`` with a path in ``docs_path`` will give a
   valid relative link from one HTML page to the root folder of specific version.
-
-Customization
--------------
-You can provide you own template for generating the version selector etc.
-
-The easiest way is probably to copy one of the default HTML templates e.g.
-``src/templates/footer.html`` one and adapt it.
-
-If you want ot "inject" a custom footer. Create a file called ``footer.html``
-and put it somewhere in your project e.g. ``mydocs/footer.html`` now invoke
-``versjon`` with the ``--user_templates`` argument e.g.::
-
-    ./versjon --user_templates=mydocs
-
-``verjson`` will prioritize finding templates in the users path first. If non
-is found it will fallback to the built-in.
-
-If you want to disable a built-in template, simply create an empty file with
-the same name as the template you want to disable e.g. ``header.html`` if
-the template is empty no content will be injected.

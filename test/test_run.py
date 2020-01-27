@@ -41,7 +41,7 @@ def test_run(testdirectory, datarecorder):
     print(r)
 
 
-def test_create_context(testdirectory, datarecorder):
+def test_create_general_context(testdirectory, datarecorder):
 
     project_dir = setup_project(testdirectory)
 
@@ -49,7 +49,7 @@ def test_create_context(testdirectory, datarecorder):
 
     builds = versjon.versjon_tool.find_builds(docs_dir=docs_path)
 
-    context = versjon.versjon_tool.general_context(
+    context = versjon.versjon_tool.create_general_context(
         docs_dir=docs_path, builds=builds)
 
     datarecorder.record_data(
@@ -69,5 +69,5 @@ def test_find_builds(testdirectory, datarecorder):
         docs_dir, build) for build in builds]
 
     datarecorder.record_data(
-        data=paths,
+        data=sorted(paths),
         recording_file=f'test/recordings/find_builds.json')

@@ -49,7 +49,7 @@ def posix_path(from_dir, to_dir):
     return pathlib.Path(os.path.relpath(path=to_dir, start=from_dir)).as_posix()
 
 
-def general_context(docs_dir, builds):
+def create_general_context(docs_dir, builds):
     """ Create the general context dictionary
 
     See the README for the format.
@@ -114,7 +114,7 @@ def run(docs_path, no_stable_index, user_templates):
     inject_render = template_render.TemplateRender(user_path=user_templates)
 
     # Get the general context
-    context = general_context(docs_dir=docs_path, builds=builds)
+    general_context = create_general_context(docs_dir=docs_path, builds=builds)
 
     for build in builds:
 
@@ -130,23 +130,25 @@ def run(docs_path, no_stable_index, user_templates):
 
             # Page context
             page_context = {
-                'docs_root': posix_path(
+                'page_root': posix_path(
                     from_dir=html_page.parent, to_dir=docs_path) + '/'
             }
 
-            print(f"context => {context}, {build_context}, {page_context}")
+            print(
+                f"context => {general_context}, {build_context}, {page_context}")
 
             # Get the HTML to inject
             head_data = inject_render.render(
-                template_file='head.html')
+                template_file='head.html', **general_context,
+                **build_context, **page_context)
 
             header_data = inject_render.render(
-                template_file='header.html', **context, **build_context,
-                **page_context)
+                template_file='header.html', **general_context,
+                **build_context, **page_context)
 
             footer_data = inject_render.render(
-                template_file='footer.html', **context, **build_context,
-                **page_context)
+                template_file='footer.html', **general_context,
+                **build_context, **page_context)
 
             # Get the HTML for each page
             with open(html_page, 'r') as html_file:
@@ -168,7 +170,7 @@ def run(docs_path, no_stable_index, user_templates):
             with open(html_page, 'w') as html_file:
                 html_file.write(str(page))
 
-    if no_stable_index and context['stable']:
+    if not no_stable_index and general_context['stable']:
         # We are pragmatic here and we bail if no stable version exist. We could
         # ask the user
 
@@ -183,11 +185,12 @@ def run(docs_path, no_stable_index, user_templates):
 
         # Page context
         page_context = {
-            'docs_root': '../'
+            'page_root': '../'
         }
 
         index_data = inject_render.render(
-            template_file='stable_index.html', **context, **page_context)
+            template_file='stable_index.html', **general_context,
+            **page_context)
 
         # Get the HTML for each page
         with open(stable_dir.joinpath('index.html'), 'w') as index_html:
