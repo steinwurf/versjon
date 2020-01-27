@@ -13,7 +13,6 @@
         font-size: 15px;
     }
 
-    .active,
     .versjon:hover {
         background-color: #555;
     }
@@ -26,18 +25,18 @@
         margin-left: 5px;
     }
 
-    .active:after {
+    .versjon:active:after {
         content: "\2212";
     }
 
-    .content {
+    .versjon-content {
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.2s ease-out;
         background-color: #f1f1f1;
     }
 
-    .content-inner {
+    .versjon-content-inner {
         padding: 10px 18px
     }
 
@@ -48,7 +47,7 @@
         width: 250px;
     }
 
-    p.version-old-warning {
+    p.versjon-old-warning {
         margin: 10px 0;
         padding: 5px 10px;
         border-radius: 4px;
@@ -65,12 +64,12 @@
                 rgba(255, 255, 255, 0.2) 112px);
     }
 
-    p.version-old-warning a {
+    p.versjon-old-warning a {
         color: #fff;
         border-color: #fff;
     }
 
-    p.version-dev-warning {
+    p.versjon-dev-warning {
         margin: 10px 0;
         padding: 5px 10px;
         border-radius: 4px;
@@ -87,7 +86,7 @@
                 rgba(255, 255, 255, 0.2) 112px);
     }
 
-    p.version-dev-warning a {
+    p.versjon-dev-warning a {
         color: #fff;
         border-color: #fff;
     }
