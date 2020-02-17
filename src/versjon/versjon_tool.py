@@ -188,7 +188,6 @@ def run(docs_path, no_index, no_stable_index, user_templates):
 
         stable_dir.mkdir()
 
-        # Page context
         page_context = {
             'page_root': '../'
         }
@@ -197,14 +196,12 @@ def run(docs_path, no_index, no_stable_index, user_templates):
             template_file='stable_index.html', **general_context,
             **page_context)
 
-        # Get the HTML for each page
         with open(stable_dir.joinpath('index.html'), 'w') as index_html:
             index_html.write(index_data)
 
     if not no_index:
         index_dir = docs_path
 
-        # Page context
         page_context = {
             'page_root': '/'
         }
@@ -213,7 +210,6 @@ def run(docs_path, no_index, no_stable_index, user_templates):
             template_file='index.html', **general_context,
             **page_context)
 
-        # Get the HTML for each page
-        with open(stable_dir.joinpath('index.html'), 'w') as index_html:
+        with open(index_dir.joinpath('index.html'), 'w') as index_html:
             index_html.write(index_data)
 
