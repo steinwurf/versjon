@@ -9,8 +9,8 @@ Introduction
 
 What it is:
 
-* A tool for linking muiltiple versions of your project's Sphinx
-  documentation (without the need for special services such as readthedocs.org).
+* A tool for linking multiple versions of your project's Sphinx
+  documentation, without the need for special services such as readthedocs.org.
 * Useful if you build and host your documentation as a static site.
 
 How it works:
@@ -50,16 +50,23 @@ Building the docs
    If you have the specified the ``version`` number in ``conf.py`` you can omit
    the ``-D version`` option to Sphinx build.
 
-2. Run ``versjon`` in the common diretory - and you are done.
+2. Run ``versjon`` in the common directory - and you are done.
+
+Index page
+----------
+
+As default ``versjon`` will generate an ``index.html`` file with a redirect to
+the latest stable version, or if no semver version exists the first branch,
+presumably the master.
+You can disable this behavior with ``--no-index`` option.
 
 Stable index
 ------------
 
-As default ``versjon`` will generate a folder in the documentaiton root called
+As default ``versjon`` will generate a folder in the documentation root called
 ``stable``. This folder will contain an ``index.html`` with a redirect to the
-latest stable version. You can disable thie behaviour with ``--no-stable-index``
-option.
-
+latest stable version. You can disable this behavior with
+``--no-stable-index`` option.
 
 Built in templates (injection)
 ------------------------------
@@ -68,32 +75,35 @@ Built in templates (injection)
 in the generated HTML:
 
 * ``head.html``: This template gets injected into the ``<head>`` tag of
-  the generated HTML pages. In this tempate you have access to the following
+  the generated HTML pages. In this template you have access to the following
   variables: ``general``, ``build``, ``page``.
 * ``header.html``: This template is inject at the beginning of the ``<body>``
-  tag. In this tempate you have access to the following variables:
+  tag. In this template you have access to the following variables:
   ``general``, ``build``, ``page``.
 * ``footer.html``: This template is inject at the end of the ``<body>``
-  tag. In this tempate you have access to the following variables:
+  tag. In this template you have access to the following variables:
   ``general``, ``build``, ``page``.
+* ``index.html``: This template is use to generate an ``index.html``
+  in the ``root`` folder.  In this template you have access to the
+  following variables: ``general``, ``page``.
 * ``stable_index.html``: This template is use to generate an ``index.html``
-  in the ``stable`` folder.  In this tempate you have access to the
+  in the ``stable`` folder.  In this template you have access to the
   following variables: ``general``, ``page``.
 
 Customization
 -------------
 You can provide you own template for generating the version selector etc.
 
-The easiest way is probably to copy one of the default HTML templates e.g.
+The easiest way is probably to copy one of the default HTML templates, e.g.,
 ``src/templates/footer.html`` one and adapt it.
 
-If you want ot "inject" a custom footer. Create a file called ``footer.html``
-and put it somewhere in your project e.g. ``mydocs/footer.html`` now invoke
-``versjon`` with the ``--user_templates`` argument e.g.::
+If you want to "inject" a custom footer. Create a file called ``footer.html``
+and put it somewhere in your project, e.g., ``mydocs/footer.html`` now invoke
+``versjon`` with the ``--user_templates`` argument, e.g.,::
 
     ./versjon --user_templates=mydocs
 
-``verjson`` will prioritize finding templates in the users path first. If non
+``verjson`` will prioritize finding templates in the users path first. If none
 is found it will fallback to the built-in.
 
 If you want to disable a built-in template, simply create an empty file with
@@ -112,7 +122,7 @@ General variables
 .................
 
 * ``semver``: A list of versions with valid sematic version numbers.
-* ``other``: A list of versions with non semantic version numbers. Typically
+* ``other``: A list of versions with non-semantic version numbers. Typically
   this list will contain branches etc.
 * ``stable``: If we have any semantic version releases the ``stable`` version
   will be the newest release in the ``semver`` list.
@@ -128,6 +138,8 @@ Build variables
 Page variables
 ..............
 
-* ``page_root``: Relative path to the documentation root from a given HTML page.
+* ``page_root``: Relative path to the documentation root from a given HTML
+  page.
   Concatenating the ``page_root`` with a path in ``docs_path`` will give a
-  valid relative link from one HTML page to the root folder of specific version.
+  valid relative link from one HTML page to the root folder of specific
+  version.
