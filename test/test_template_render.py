@@ -3,9 +3,11 @@ import versjon.template_render
 
 def test_template_render(datarecorder):
 
-    # Taken from test/recordings/context.json
+    # Partly taken from test/recordings/general_context.json
     context = {
         "current": "1.1.0",
+        "page_root": '../',
+        "is_semver": True,
         "docs_path": {
             "1.0.0": "build_1.0.0",
             "1.1.0": "build_1.1.0",
@@ -13,8 +15,6 @@ def test_template_render(datarecorder):
             "abc": "build_abc",
             "master": "build_master"
         },
-        "page_root": '../',
-        "is_semver": True,
         "other": [
             "master",
             "abc"

@@ -6,6 +6,7 @@
     "abc": "build_abc",
     "master": "build_master"
   },
+  "index": "2.0.0",
   "other": [
     "master",
     "abc"

@@ -93,10 +93,15 @@ def create_general_context(docs_dir, builds):
     # Make sure that the master is listed first if in list
     context['other'] = sorted(context['other'], key=lambda v: v != 'master')
 
+    if context['stable'] is not None:
+        context['index'] = context['stable']
+    else:
+        context['index'] = context['other'][0]
+
     return context
 
 
-def run(docs_path, no_stable_index, user_templates):
+def run(docs_path, no_index, no_stable_index, user_templates):
     """ Run the versjon tool.
 
     :param docs_path: The path to the documentation as a string
@@ -171,8 +176,8 @@ def run(docs_path, no_stable_index, user_templates):
                 html_file.write(str(page))
 
     if not no_stable_index and general_context['stable']:
-        # We are pragmatic here and we bail if no stable version exist. We could
-        # ask the user
+        # We are pragmatic here and we bail if no stable version exist.
+        # We could ask the user
 
         stable_dir = docs_path.joinpath('stable')
 
@@ -183,7 +188,6 @@ def run(docs_path, no_stable_index, user_templates):
 
         stable_dir.mkdir()
 
-        # Page context
         page_context = {
             'page_root': '../'
         }
@@ -192,6 +196,20 @@ def run(docs_path, no_stable_index, user_templates):
             template_file='stable_index.html', **general_context,
             **page_context)
 
-        # Get the HTML for each page
         with open(stable_dir.joinpath('index.html'), 'w') as index_html:
             index_html.write(index_data)
+
+    if not no_index:
+        index_dir = docs_path
+
+        page_context = {
+            'page_root': '/'
+        }
+
+        index_data = inject_render.render(
+            template_file='index.html', **general_context,
+            **page_context)
+
+        with open(index_dir.joinpath('index.html'), 'w') as index_html:
+            index_html.write(index_data)
+
