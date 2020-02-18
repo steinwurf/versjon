@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+1.1.1
+-----
 * Patch: Make page root relative for index page.
 
 1.1.0
