@@ -11,18 +11,19 @@ import pytest_testdirectory
 import versjon.versjon_tool
 
 
-def setup_project(testdirectory):
+def setup_project(testdirectory, include_semver=True):
 
     project_dir = testdirectory.copy_dir(directory="test/data/test_project")
 
-    project_dir.run(
-        'sphinx-build --no-color -vvv -b html . -D version=1.0.0 build_1.0.0')
+    if include_semver:
+        project_dir.run(
+            'sphinx-build --no-color -vvv -b html . -D version=1.0.0 build_1.0.0')
 
-    project_dir.run(
-        'sphinx-build --no-color -vvv -b html . -D version=1.1.0 build_1.1.0')
+        project_dir.run(
+            'sphinx-build --no-color -vvv -b html . -D version=1.1.0 build_1.1.0')
 
-    project_dir.run(
-        'sphinx-build --no-color -vvv -b html . -D version=2.0.0 build_2.0.0')
+        project_dir.run(
+            'sphinx-build --no-color -vvv -b html . -D version=2.0.0 build_2.0.0')
 
     project_dir.run(
         'sphinx-build --no-color -vvv -b html . -D version=master build_master')
@@ -33,7 +34,7 @@ def setup_project(testdirectory):
     return project_dir
 
 
-def test_run(testdirectory, datarecorder):
+def test_run(testdirectory):
 
     project_dir = setup_project(testdirectory)
 
@@ -70,4 +71,40 @@ def test_find_builds(testdirectory, datarecorder):
 
     datarecorder.record_data(
         data=sorted(paths),
-        recording_file=f'test/recordings/find_builds.json')
+        recording_file='test/recordings/find_builds.json')
+
+
+def test_files(testdirectory, datarecorder):
+
+    project_dir = setup_project(testdirectory)
+    r = project_dir.run(f'versjon --docs_path {project_dir}')
+    assert project_dir.contains_dir("build_1.0.0")
+    assert project_dir.contains_dir("build_1.1.0")
+    assert project_dir.contains_dir("build_2.0.0")
+    assert project_dir.contains_dir("build_abc")
+    assert project_dir.contains_dir("build_master")
+    assert project_dir.contains_dir("stable")
+    assert project_dir.contains_file("index.html")
+    assert project_dir.contains_file("stable/index.html")
+
+    datarecorder.record_file(
+        data_file=os.path.join(project_dir.path(), 'index.html'),
+        recording_file='test/recordings/index.html')
+
+    datarecorder.record_file(
+        data_file=os.path.join(project_dir.path(), 'stable/index.html'),
+        recording_file='test/recordings/stable_index.html')
+
+
+def test_files_no_semver(testdirectory, datarecorder):
+
+    project_dir = setup_project(testdirectory, include_semver=False)
+    r = project_dir.run(f'versjon --docs_path {project_dir}')
+    assert project_dir.contains_dir("build_abc")
+    assert project_dir.contains_dir("build_master")
+    assert not project_dir.contains_dir("stable")
+    assert project_dir.contains_file("index.html")
+
+    datarecorder.record_file(
+        data_file=os.path.join(project_dir.path(), 'index.html'),
+        recording_file='test/recordings/no_semver_index.html')
