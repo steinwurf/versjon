@@ -203,7 +203,7 @@ def run(docs_path, no_index, no_stable_index, user_templates):
         index_dir = docs_path
 
         page_context = {
-            'page_root': '/'
+            'page_root': './'
         }
 
         index_data = inject_render.render(
