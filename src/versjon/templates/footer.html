@@ -1,13 +1,17 @@
 {# FORMAT_VERSION #}
 
 {% macro format_version(version) %}
-{% set version_path = page_root + docs_path[version] %}
-{% if current == version %}
+{% if page in version.html_files %}
+{% set version_path = page_root + docs_path[version.name] + "/" + page %}
+{% else %}
+{% set version_path = page_root + docs_path[version.name] %}
+{% endif %}
+{% if current == version.name %}
 <strong>
-    <dd><a href="{{ version_path }}">{{ version }}</a></dd>
+    <dd><a href="{{ version_path }}">{{ version.name }}</a></dd>
 </strong>
 {% else %}
-<dd><a href="{{ version_path }}">{{ version }}</a></dd>
+<dd><a href="{{ version_path }}">{{ version.name }}</a></dd>
 {% endif %}
 {% endmacro %}
 
