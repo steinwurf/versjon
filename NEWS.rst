@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+2.0.0
+-----
 * Major: Changed the general_context to allow links to keep their path when
   changing to another version. If a page doesn't exists at a specific version
   the link will simply go to the root.
