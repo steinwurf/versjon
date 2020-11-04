@@ -1,12 +1,17 @@
 {% if stable %}
-{% if stable != current  %}
-{% set stable_path = page_root + docs_path[stable] %}
+{% if stable.name != current  %}
+
+{% if page in stable.html_files %}
+{% set stable_path = page_root + docs_path[stable.name] + "/" + page %}
+{% else %}
+{% set stable_path = page_root + docs_path[stable.name] %}
+{% endif %}
 {% if is_semver  %}
 <p class="versjon-old-warning"><strong>Warning:</strong> This is an old version. The latest stable version is <a
-        href="{{ stable_path }}">Version {{ stable }}</a>.</p>
+        href="{{ stable_path }}">Version {{ stable.name }}</a>.</p>
 {% else %}
 <p class="versjon-dev-warning"><strong>Warning:</strong> This is a development version. The latest stable version is <a
-        href="{{ stable_path }}">Version {{ stable }}</a>.</p>
+        href="{{ stable_path }}">Version {{ stable.name }}</a>.</p>
 {% endif %}
 {% endif %}
 {% endif %}

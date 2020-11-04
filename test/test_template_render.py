@@ -6,6 +6,7 @@ def test_template_render(datarecorder):
     # Partly taken from test/recordings/general_context.json
     context = {
         "current": "1.1.0",
+        "page": 'path/to/old_file.html',
         "page_root": '../',
         "is_semver": True,
         "docs_path": {
@@ -16,13 +17,13 @@ def test_template_render(datarecorder):
             "master": "build_master"
         },
         "other": [
-            "master",
-            "abc"
+            {"name": "master", "html_files": ["path/to/new_file.html", "path/to/old_file.html"]},
+            {"name": "abc", "html_files": []}
         ],
         "semver": [
-            "2.0.0",
-            "1.1.0",
-            "1.0.0"
+            {"name": "2.0.0", "html_files": ["path/to/old_file.html"]},
+            {"name": "1.1.0", "html_files": ["path/to/old_file.html"]},
+            {"name": "1.0.0", "html_files": ["path/to/old_file.html"]}
         ],
         "stable": "2.0.0"
     }

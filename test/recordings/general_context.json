@@ -6,15 +6,71 @@
     "abc": "build_abc",
     "master": "build_master"
   },
-  "index": "2.0.0",
+  "index": {
+    "html_files": [
+      "index.html",
+      "search.html",
+      "genindex.html",
+      "sub/sub.html"
+    ],
+    "name": "2.0.0"
+  },
   "other": [
-    "master",
-    "abc"
+    {
+      "html_files": [
+        "index.html",
+        "search.html",
+        "genindex.html",
+        "sub/sub.html"
+      ],
+      "name": "master"
+    },
+    {
+      "html_files": [
+        "index.html",
+        "search.html",
+        "genindex.html",
+        "sub/sub.html"
+      ],
+      "name": "abc"
+    }
   ],
   "semver": [
-    "2.0.0",
-    "1.1.0",
-    "1.0.0"
+    {
+      "html_files": [
+        "index.html",
+        "search.html",
+        "genindex.html",
+        "sub/sub.html"
+      ],
+      "name": "2.0.0"
+    },
+    {
+      "html_files": [
+        "index.html",
+        "search.html",
+        "genindex.html",
+        "sub/sub.html"
+      ],
+      "name": "1.1.0"
+    },
+    {
+      "html_files": [
+        "index.html",
+        "search.html",
+        "genindex.html",
+        "sub/sub.html"
+      ],
+      "name": "1.0.0"
+    }
   ],
-  "stable": "2.0.0"
+  "stable": {
+    "html_files": [
+      "index.html",
+      "search.html",
+      "genindex.html",
+      "sub/sub.html"
+    ],
+    "name": "2.0.0"
+  }
 }

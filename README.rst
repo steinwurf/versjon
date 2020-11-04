@@ -121,9 +121,11 @@ The following lists the various variables.
 General variables
 .................
 
-* ``semver``: A list of versions with valid sematic version numbers.
-* ``other``: A list of versions with non-semantic version numbers. Typically
-  this list will contain branches etc.
+* ``semver``: A list of version dicts with a name which is a valid sematic
+  version numbers, and a list of available files in this version.
+* ``other``: A list of version dicts with a name which non-semantic version
+  numbers, and a list of available files in this version.
+  Typically the ``other`` list will contain branches.
 * ``stable``: If we have any semantic version releases the ``stable`` version
   will be the newest release in the ``semver`` list.
 * ``docs_path``: Dictionary mapping versions to the build folder for a version
@@ -132,7 +134,7 @@ General variables
 Build variables
 ...............
 
-* ``current``: The current version
+* ``current``: The current version name
 * ``is_semver``: True if the current version follows semantic versioning
 
 Page variables

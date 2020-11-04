@@ -67,13 +67,22 @@ def create_general_context(docs_dir, builds):
     for build in builds:
 
         # Get the version we are "pointing" to
-        version = current_version(build)
+        version_name = current_version(build)
         path = posix_path(from_dir=docs_dir, to_dir=build)
 
         # Store the version and its path in the all section
-        context['docs_path'][version] = path
+        context['docs_path'][version_name] = path
 
-        if semver.validate(version):
+        html_files = []
+        for html_page in build.glob('**/*.html'):
+            html_files.append(posix_path(from_dir=build, to_dir=html_page))
+
+        version = {
+            'name': version_name,
+            'html_files': html_files
+        }
+
+        if semver.validate(version_name):
             context['semver'].append(version)
 
         else:
@@ -81,17 +90,22 @@ def create_general_context(docs_dir, builds):
 
     # Sort all versions
     context['semver'] = sorted(
-        context['semver'], key=lambda v: semver.Version(v), reverse=True)
+        context['semver'], key=lambda v: semver.Version(v['name']), reverse=True)
 
     # Mark current stable release
     if context['semver']:
         context['stable'] = context['semver'][0]
 
     # Sort the non-semver versions
-    context['other'] = sorted(context['other'])
+    context['other'] = sorted(context['other'], key=lambda v: v['name'])
 
     # Make sure that the master is listed first if in list
-    context['other'] = sorted(context['other'], key=lambda v: v != 'master')
+    context['other'] = sorted(
+        context['other'], key=lambda v: v['name'] != 'master')
+
+    # Make sure that the latest is listed first if in list
+    context['other'] = sorted(
+        context['other'], key=lambda v: v['name'] != 'latest')
 
     if context['stable'] is not None:
         context['index'] = context['stable']
@@ -133,10 +147,15 @@ def run(docs_path, no_index, no_stable_index, user_templates):
 
         for html_page in build.glob('**/*.html'):
 
+            page_root = posix_path(
+                    from_dir=html_page.parent, to_dir=docs_path) + '/'
+
+            page = posix_path(from_dir=build, to_dir=html_page)
+
             # Page context
             page_context = {
-                'page_root': posix_path(
-                    from_dir=html_page.parent, to_dir=docs_path) + '/'
+                'page': page,
+                'page_root': page_root,
             }
 
             print(
