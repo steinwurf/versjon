@@ -8,9 +8,9 @@
   },
   "index": {
     "html_files": [
+      "genindex.html",
       "index.html",
       "search.html",
-      "genindex.html",
       "sub/sub.html"
     ],
     "name": "2.0.0"
@@ -18,18 +18,18 @@
   "other": [
     {
       "html_files": [
+        "genindex.html",
         "index.html",
         "search.html",
-        "genindex.html",
         "sub/sub.html"
       ],
       "name": "master"
     },
     {
       "html_files": [
+        "genindex.html",
         "index.html",
         "search.html",
-        "genindex.html",
         "sub/sub.html"
       ],
       "name": "abc"
@@ -38,27 +38,27 @@
   "semver": [
     {
       "html_files": [
+        "genindex.html",
         "index.html",
         "search.html",
-        "genindex.html",
         "sub/sub.html"
       ],
       "name": "2.0.0"
     },
     {
       "html_files": [
+        "genindex.html",
         "index.html",
         "search.html",
-        "genindex.html",
         "sub/sub.html"
       ],
       "name": "1.1.0"
     },
     {
       "html_files": [
+        "genindex.html",
         "index.html",
         "search.html",
-        "genindex.html",
         "sub/sub.html"
       ],
       "name": "1.0.0"
@@ -66,9 +66,9 @@
   ],
   "stable": {
     "html_files": [
+      "genindex.html",
       "index.html",
       "search.html",
-      "genindex.html",
       "sub/sub.html"
     ],
     "name": "2.0.0"

@@ -79,7 +79,7 @@ def create_general_context(docs_dir, builds):
 
         version = {
             'name': version_name,
-            'html_files': html_files
+            'html_files': sorted(html_files)
         }
 
         if semver.validate(version_name):
