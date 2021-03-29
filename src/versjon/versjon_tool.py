@@ -3,6 +3,7 @@
 
 
 import json
+import fnmatch
 import os
 import pathlib
 import pickle
@@ -115,10 +116,12 @@ def create_general_context(docs_dir, builds):
     return context
 
 
-def run(docs_path, no_index, no_stable_index, user_templates):
+def run(docs_path, exclude_pattern, no_index, no_stable_index, user_templates):
     """ Run the versjon tool.
 
     :param docs_path: The path to the documentation as a string
+    :param exclude_pattern: Exclude pattern for files not to modify.
+                            Uses Unix shell-style wildcards.
     """
     # Transform to Path
     docs_path = pathlib.Path(docs_path)
@@ -151,6 +154,11 @@ def run(docs_path, no_index, no_stable_index, user_templates):
                     from_dir=html_page.parent, to_dir=docs_path) + '/'
 
             page = posix_path(from_dir=build, to_dir=html_page)
+
+            if exclude_pattern is not None:
+                if fnmatch.fnmatch(str(html_page), exclude_pattern):
+                    print(f'Skipping => {html_page}')
+                    continue
 
             # Page context
             page_context = {
