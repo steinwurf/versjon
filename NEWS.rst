@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+2.1.0
+-----
 * Minor: Added support for an exclude_patten so that matched files will not be
   modified.
 
