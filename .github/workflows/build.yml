@@ -1,6 +1,24 @@
 name: Tests
 on: [push, pull_request]
 jobs:
+  # Pip performed in docker
+  pip:
+    strategy:
+      fail-fast: false
+    runs-on: [self-hosted, docker]
+    name: Pip install
+    container:
+      image: python:3.9.5
+      options: --user 0:0
+      volumes:
+        - /home/buildbot/.ssh:/root/.ssh
+    steps:
+      - name: Install SSH client
+        run: apt update && apt -y install openssh-client
+      - name: Checkout source code
+        uses: actions/checkout@v2
+      - name: Install versjon
+        run: python -m pip install versjon
   waf:
     strategy:
       fail-fast: false
