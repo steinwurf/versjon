@@ -1,4 +1,4 @@
-name: Pip Install
+name: Waf Tests
 on: [push, pull_request]
 jobs:
   waf:
