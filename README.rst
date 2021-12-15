@@ -17,6 +17,7 @@ Introduction
 
 .. |Pip Install| image:: https://github.com/steinwurf/versjon/actions/workflows/pip.yml/badge.svg
       :target: https://github.com/steinwurf/versjon/actions/workflows/pip.yml
+
 What it is:
 
 * A tool for linking multiple versions of your project's Sphinx
