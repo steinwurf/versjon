@@ -9,8 +9,8 @@ Introduction
 .. |Waf Python Tests| image:: https://github.com/steinwurf/versjon/actions/workflows/python-waf.yml/badge.svg
    :target: https://github.com/steinwurf/versjon/actions/workflows/python-waf.yml
 
-.. |Flake8| image:: https://github.com/steinwurf/versjon/actions/workflows/flake.yml/badge.svg
-    :target: https://github.com/steinwurf/versjon/actions/workflows/flake.yml
+.. |Flake8| image:: https://github.com/steinwurf/versjon/actions/workflows/flake8.yml/badge.svg
+    :target: https://github.com/steinwurf/versjon/actions/workflows/flake8.yml
 
 .. |Black| image:: https://github.com/steinwurf/versjon/actions/workflows/black.yml/badge.svg
       :target: https://github.com/steinwurf/versjon/actions/workflows/black.yml
