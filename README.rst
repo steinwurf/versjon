@@ -6,8 +6,8 @@ Introduction
 .. |PyPi| image:: https://badge.fury.io/py/versjon.svg
     :target: https://badge.fury.io/py/versjon
 
-.. |Waf Python Tests| image:: https://github.com/steinwurf/versjon/actions/workflows/python-waf.yml/badge.svg
-   :target: https://github.com/steinwurf/versjon/actions/workflows/python-waf.yml
+.. |Waf Python Tests| image:: https://github.com/steinwurf/versjon/actions/workflows/waf.yml/badge.svg
+   :target: https://github.com/steinwurf/versjon/actions/workflows/waf.yml
 
 .. |Flake8| image:: https://github.com/steinwurf/versjon/actions/workflows/flake8.yml/badge.svg
     :target: https://github.com/steinwurf/versjon/actions/workflows/flake8.yml
