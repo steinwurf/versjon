@@ -1,11 +1,22 @@
 Introduction
 ============
 
-.. image:: https://img.shields.io/appveyor/ci/SteinwurfApS/versjon/master.svg?style=flat-square&logo=appveyor
-    :target: https://ci.appveyor.com/project/SteinwurfApS/versjon
+|PyPi| |Waf Python Tests| |Black| |Flake8| |Pip Install|
 
-.. image:: https://travis-ci.org/steinwurf/versjon.svg?branch=master
-    :target: https://travis-ci.org/steinwurf/versjon
+.. |PyPi| image:: https://badge.fury.io/py/versjon.svg
+    :target: https://badge.fury.io/py/versjon
+
+.. |Waf Python Tests| image:: https://github.com/steinwurf/versjon/actions/workflows/python-waf.yml/badge.svg
+   :target: https://github.com/steinwurf/versjon/actions/workflows/python-waf.yml
+
+.. |Flake8| image:: https://github.com/steinwurf/versjon/actions/workflows/flake.yml/badge.svg
+    :target: https://github.com/steinwurf/versjon/actions/workflows/flake.yml
+
+.. |Black| image:: https://github.com/steinwurf/versjon/actions/workflows/black.yml/badge.svg
+      :target: https://github.com/steinwurf/versjon/actions/workflows/black.yml
+
+.. |Pip Install| image:: https://github.com/steinwurf/versjon/actions/workflows/pip.yml/badge.svg
+      :target: https://github.com/steinwurf/versjon/actions/workflows/pip.yml
 
 What it is:
 
