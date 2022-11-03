@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+2.2.0
+-----
 * Patch: Added slash in redirect index files.
 * Minor: Updated waf.
 

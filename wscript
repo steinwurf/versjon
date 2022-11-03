@@ -8,7 +8,7 @@ from waflib.Build import BuildContext
 
 top = "."
 
-VERSION = "2.1.0"
+VERSION = "2.2.0"
 
 
 class UploadContext(BuildContext):
