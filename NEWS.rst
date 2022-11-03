@@ -6,6 +6,7 @@ every change, see the Git log.
 
 Latest
 ------
+* Patch: Added slash in redirect index files.
 * Minor: Updated waf.
 
 2.1.0

@@ -19,14 +19,14 @@
 
 # -- Project information -----------------------------------------------------
 
-project = u"test_project"
-copyright = u"2020, Steinwurf ApS"
-author = u"Steinwurf ApS"
+project = "test_project"
+copyright = "2020, Steinwurf ApS"
+author = "Steinwurf ApS"
 
 # The short X.Y version
-version = u""
+version = ""
 # The full version, including alpha/beta/rc tags
-release = u""
+release = ""
 
 
 # -- General configuration ---------------------------------------------------
@@ -62,7 +62,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = [u"_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
@@ -127,8 +127,8 @@ latex_documents = [
     (
         master_doc,
         "test_project.tex",
-        u"test\\_project Documentation",
-        u"Steinwurf ApS",
+        "test\\_project Documentation",
+        "Steinwurf ApS",
         "manual",
     ),
 ]
@@ -138,7 +138,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "test_project", u"test_project Documentation", [author], 1)]
+man_pages = [(master_doc, "test_project", "test_project Documentation", [author], 1)]
 
 
 # -- Options for Texinfo output ----------------------------------------------
@@ -150,7 +150,7 @@ texinfo_documents = [
     (
         master_doc,
         "test_project",
-        u"test_project Documentation",
+        "test_project Documentation",
         author,
         "test_project",
         "One line description of project.",
