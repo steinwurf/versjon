@@ -28,11 +28,11 @@ def file_find_version(filepath):
             =            #    Match and equal sign
             \s*          #    Match zero or more spaces
         )                # End group
-        '
+        "
         (                # Group and match
             \d\.\d\.\d  #    Match digit.digit.digit e.g. 1.2.3
         )                # End of group
-        '
+        "
         """,
             re.VERBOSE,
         )
