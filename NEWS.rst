@@ -6,7 +6,8 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Minor: Added --stable-version option to allow the stable version to be
+  overridden.
 
 2.2.0
 -----
@@ -21,12 +22,12 @@ Latest
 2.0.0
 -----
 * Major: Changed the general_context to allow links to keep their path when
-  changing to another version. If a page doesn't exists at a specific version
+  changing to another version. If a page doesn't exist at a specific version
   the link will simply go to the root.
 
 1.1.1
 -----
-* Patch: Make page root relative for index page.
+* Patch: Make page root relative to the index page.
 
 1.1.0
 -----
