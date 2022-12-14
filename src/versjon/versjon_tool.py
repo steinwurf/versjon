@@ -25,8 +25,8 @@ def current_version(build_dir):
 
     if not inventory.version:
         raise RuntimeError(
-            f"The versjon tool requires a version number "
-            "in the {objects_file.parent}. Add one to conf.py or pass "
+            "The versjon tool requires a version number in the"
+            f"'{objects_file.parent}' directory. Add one to conf.py or pass "
             'it to sphinx build using "-D version=X.Y.Z".'
         )
 
