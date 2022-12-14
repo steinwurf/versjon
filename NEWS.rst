@@ -6,6 +6,10 @@ every change, see the Git log.
 
 Latest
 ------
+* tbd
+
+2.3.0
+-----
 * Minor: Added --stable-version option to allow the stable version to be
   overridden.
 
