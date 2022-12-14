@@ -25,8 +25,8 @@ def current_version(build_dir):
 
     if not inventory.version:
         raise RuntimeError(
-            f"The versjon tool requires a version number "
-            "in the {objects_file.parent}. Add one to conf.py or pass "
+            "The versjon tool requires a version number in the"
+            f"'{objects_file.parent}' directory. Add one to conf.py or pass "
             'it to sphinx build using "-D version=X.Y.Z".'
         )
 
@@ -51,7 +51,7 @@ def posix_path(from_dir, to_dir):
     return pathlib.Path(os.path.relpath(path=to_dir, start=from_dir)).as_posix()
 
 
-def create_general_context(docs_dir, builds):
+def create_general_context(docs_dir, builds, stable_version=None):
     """Create the general context dictionary
 
     See the README for the format.
@@ -81,6 +81,9 @@ def create_general_context(docs_dir, builds):
 
         version = {"name": version_name, "html_files": sorted(html_files)}
 
+        if stable_version and not context["stable"] and (version_name == stable_version or path == stable_version):
+            context["stable"] = version
+
         if semver.validate(version_name):
             context["semver"].append(version)
 
@@ -92,8 +95,11 @@ def create_general_context(docs_dir, builds):
         context["semver"], key=lambda v: semver.Version(v["name"]), reverse=True
     )
 
+    if stable_version and not context["stable"]:
+        raise Exception(f"Specified stable version '{stable_version}' not found")
+
     # Mark current stable release
-    if context["semver"]:
+    if context["semver"] and not context["stable"]:
         context["stable"] = context["semver"][0]
 
     # Sort the non-semver versions
@@ -113,7 +119,7 @@ def create_general_context(docs_dir, builds):
     return context
 
 
-def run(docs_path, exclude_pattern, no_index, no_stable_index, user_templates):
+def run(docs_path, exclude_pattern, no_index, no_stable_index, user_templates, stable_version=None):
     """Run the versjon tool.
 
     :param docs_path: The path to the documentation as a string
@@ -133,7 +139,7 @@ def run(docs_path, exclude_pattern, no_index, no_stable_index, user_templates):
     inject_render = template_render.TemplateRender(user_path=user_templates)
 
     # Get the general context
-    general_context = create_general_context(docs_dir=docs_path, builds=builds)
+    general_context = create_general_context(docs_dir=docs_path, builds=builds, stable_version=stable_version)
 
     for build in builds:
 

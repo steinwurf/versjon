@@ -12,15 +12,17 @@ from .versjon_tool import run
 @click.command()
 @click.option("-d", "--docs_path", default=".")
 @click.option("-e", "--exclude_pattern", default=None)
+@click.option("-S", "--stable-version", default=None, help="Overrides the stable version")
 @click.option("-v", "--verbose", is_flag=True)
 @click.option("-i", "--no_index", is_flag=True)
 @click.option("-s", "--no_stable_index", is_flag=True)
 @click.option("-u", "--user_templates", default=None)
-def cli(docs_path, exclude_pattern, verbose, no_index, no_stable_index, user_templates):
+def cli(docs_path, exclude_pattern, stable_version, verbose, no_index, no_stable_index, user_templates):
     try:
         run(
             docs_path=docs_path,
             exclude_pattern=exclude_pattern,
+            stable_version=stable_version,
             no_index=no_index,
             no_stable_index=no_stable_index,
             user_templates=user_templates,
