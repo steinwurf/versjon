@@ -7,38 +7,25 @@
 alabaster==0.7.12
     # via sphinx
 attrs==21.2.0
-    # via
-    #   jsonschema
-    #   pytest
-    #   sphobjinv
+    # via pytest
 babel==2.9.1
     # via sphinx
-beautifulsoup4==4.10.0
-    # via versjon (setup.py)
 bleach==4.1.0
     # via readme-renderer
 certifi==2021.10.8
-    # via
-    #   requests
-    #   sphobjinv
+    # via requests
 cffi==1.15.0
     # via cryptography
 charset-normalizer==2.0.9
     # via requests
-click==8.0.3
-    # via versjon (setup.py)
 colorama==0.4.4
-    # via
-    #   twine
-    #   versjon (setup.py)
-cryptography==36.0.1
+    # via twine
+cryptography==39.0.1
     # via secretstorage
 docutils==0.17.1
     # via
     #   readme-renderer
     #   sphinx
-fuzzywuzzy==0.18.0
-    # via sphobjinv
 idna==3.3
     # via requests
 imagesize==1.3.0
@@ -47,8 +34,6 @@ importlib-metadata==4.8.2
     # via
     #   keyring
     #   twine
-importlib-resources==5.4.0
-    # via jsonschema
 iniconfig==1.1.1
     # via pytest
 jeepney==0.7.1
@@ -57,8 +42,6 @@ jeepney==0.7.1
     #   secretstorage
 jinja2==3.0.3
     # via sphinx
-jsonschema==4.2.1
-    # via sphobjinv
 keyring==23.4.0
     # via twine
 markupsafe==2.0.1
@@ -82,17 +65,15 @@ pygments==2.10.0
     #   sphinx
 pyparsing==3.0.6
     # via packaging
-pyrsistent==0.18.0
-    # via jsonschema
 pytest==6.2.5
     # via
-    #   -r test/requirements.in
+    #   -r requirements.in
     #   pytest-datarecorder
     #   pytest-testdirectory
 pytest-datarecorder==1.3.0
-    # via -r test/requirements.in
+    # via -r requirements.in
 pytest-testdirectory==3.1.0
-    # via -r test/requirements.in
+    # via -r requirements.in
 pytz==2021.3
     # via babel
 readme-renderer==32.0
@@ -108,16 +89,12 @@ rfc3986==1.5.0
     # via twine
 secretstorage==3.3.1
     # via keyring
-semantic-version==2.8.5
-    # via versjon (setup.py)
 six==1.16.0
     # via bleach
 snowballstemmer==2.2.0
     # via sphinx
-soupsieve==2.3.1
-    # via beautifulsoup4
 sphinx==4.3.1
-    # via -r test/requirements.in
+    # via -r requirements.in
 sphinxcontrib-applehelp==1.0.2
     # via sphinx
 sphinxcontrib-devhelp==1.0.2
@@ -130,22 +107,18 @@ sphinxcontrib-qthelp==1.0.3
     # via sphinx
 sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
-sphobjinv==2.1
-    # via versjon (setup.py)
 toml==0.10.2
     # via pytest
 tqdm==4.62.3
     # via twine
 twine==3.7.1
-    # via -r test/requirements.in
+    # via -r requirements.in
 urllib3==1.26.7
     # via requests
 webencodings==0.5.1
     # via bleach
 zipp==3.6.0
-    # via
-    #   importlib-metadata
-    #   importlib-resources
+    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
