@@ -8,7 +8,7 @@ name: Waf Tests
   push:
     branches:
     - master
-  pull_request: null
+  pull_request:
 jobs:
   waf:
     strategy:
