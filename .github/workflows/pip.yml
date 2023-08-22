@@ -1,5 +1,9 @@
 name: Pip Install
-on: [push, pull_request]
+on: 
+  push:
+    branches:
+    - master
+  pull_request:
 jobs:
   # Pip performed in docker
   pip:
