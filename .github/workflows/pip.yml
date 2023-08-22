@@ -8,7 +8,7 @@ name: Pip Install
   push:
     branches:
     - master
-  pull_request: null
+  pull_request:
 jobs:
   pip:
     strategy:
