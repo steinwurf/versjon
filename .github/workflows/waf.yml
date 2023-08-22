@@ -1,5 +1,10 @@
 name: Waf Tests
-on: 
+'on':
+  workflow_dispatch:
+    inputs:
+      extra_resolve_options:
+        description: Extra Resolve Options
+        required: false
   push:
     branches:
     - master
@@ -9,24 +14,26 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [Windows, Linux]
-    runs-on: [self-hosted, "${{ matrix.os }}", builder]
+        os:
+        - Windows
+        - Linux
+    runs-on:
+    - self-hosted
+    - ${{ matrix.os }}
+    - builder
     name: ${{ matrix.os }} Test
     env:
       python: python3
     steps:
-      - name: Rename python3 to python on Windows
-        if: runner.os == 'Windows'
-        run: echo "python=python" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Configure
-        run: ${{ env.python }} waf configure
-      - name: Build
-        run: ${{ env.python }} waf
-      - name: Test
-        run: ${{ env.python }} waf --run_tests
-
-
-
-
+    - name: Rename python3 to python on Windows
+      if: runner.os == 'Windows'
+      run: echo "python=python" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8
+        -Append
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Configure
+      run: ${{ env.python }} waf configure
+    - name: Build
+      run: ${{ env.python }} waf
+    - name: Test
+      run: ${{ env.python }} waf --run_tests
