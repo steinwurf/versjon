@@ -1,12 +1,14 @@
-jobs:
-  Black:
-    uses: steinwurf/black-action/.github/workflows/action.yml@2.0.0
 name: Black
 'on':
-  pull_request: null
+  workflow_dispatch:
+    inputs:
+      extra_resolve_options:
+        description: Extra Resolve Options
+        required: false
   push:
     branches:
     - master
-  schedule:
-  - cron: 0 1 * * *
-  workflow_dispatch: null
+  pull_request:
+jobs:
+  Black:
+    uses: steinwurf/black-action/.github/workflows/action.yml@2.0.0
