@@ -22,3 +22,9 @@ jobs:
         run: ${{ env.python }} waf
       - name: Test
         run: ${{ env.python }} waf --run_tests
+
+# Cancel previous in-progress when pushing: https://stackoverflow.com/a/72408109
+concurrency:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
