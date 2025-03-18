@@ -1,8 +1,8 @@
 <style>
-  /* Default (light mode) styles */
+  /* Style the button that is used to open and close the version content */
   .versjon {
-    background-color: #777;
-    color: white;
+    background-color: var(--color-background-secondary);
+    color: var(--color-foreground-primary);
     cursor: pointer;
     padding: 10px;
     width: 100%;
@@ -14,12 +14,12 @@
   }
 
   .versjon:hover {
-    background-color: #555;
+    background-color: var(--color-background-hover);
   }
 
   .versjon:after {
     content: "\002B";
-    color: white;
+    color: var(--color-foreground-primary);
     font-weight: bold;
     float: right;
     margin-left: 5px;
@@ -32,9 +32,9 @@
   .versjon-content {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.2s ease-out, background-color 0.2s ease-in-out;
-    background-color: #f1f1f1;
-    color: #000;
+    transition: max-height 0.2s ease-out;
+    background-color: var(--color-background-primary);
+    color: var(--color-foreground-secondary);
   }
 
   .versjon-content-inner {
@@ -91,53 +91,47 @@
     transition: color 0.2s ease-in-out;
   }
 
-  /* Dark mode styles */
-  @media (prefers-color-scheme: dark) {
-    .versjon {
-      background-color: #333;
-      color: #ddd;
-    }
+  /* Adapt to Furo's dark mode */
+  [data-theme="dark"] .versjon {
+    background-color: var(--color-background-secondary);
+    color: var(--color-foreground-primary);
+  }
 
-    .versjon:hover {
-      background-color: #444;
-    }
+  [data-theme="dark"] .versjon:hover {
+    background-color: var(--color-background-hover);
+  }
 
-    .versjon:after {
-      color: #ddd;
-    }
+  [data-theme="dark"] .versjon-content {
+    background-color: var(--color-background-secondary);
+    color: var(--color-foreground-secondary);
+  }
 
-    .versjon-content {
-      background-color: #222;
-      color: #ddd;
-    }
+  [data-theme="dark"] p.versjon-old-warning {
+    background: #a00
+      repeating-linear-gradient(
+        135deg,
+        transparent,
+        transparent 56px,
+        rgba(255, 255, 255, 0.2) 56px,
+        rgba(255, 255, 255, 0.2) 112px
+      );
+  }
 
-    p.versjon-old-warning {
-      background: #a00
-        repeating-linear-gradient(
-          135deg,
-          transparent,
-          transparent 56px,
-          rgba(255, 255, 255, 0.2) 56px,
-          rgba(255, 255, 255, 0.2) 112px
-        );
-    }
+  [data-theme="dark"] p.versjon-dev-warning {
+    background: #b55a00
+      repeating-linear-gradient(
+        135deg,
+        transparent,
+        transparent 56px,
+        rgba(255, 255, 255, 0.2) 56px,
+        rgba(255, 255, 255, 0.2) 112px
+      );
+  }
 
-    p.versjon-dev-warning {
-      background: #b55a00
-        repeating-linear-gradient(
-          135deg,
-          transparent,
-          transparent 56px,
-          rgba(255, 255, 255, 0.2) 56px,
-          rgba(255, 255, 255, 0.2) 112px
-        );
-    }
-
-    p.versjon-old-warning a,
-    p.versjon-dev-warning a {
-      color: #ddd;
-      border-color: #ddd;
-    }
+  [data-theme="dark"] p.versjon-old-warning a,
+  [data-theme="dark"] p.versjon-dev-warning a {
+    color: var(--color-foreground-primary);
+    border-color: var(--color-foreground-primary);
   }
 </style>
 <link
