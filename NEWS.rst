@@ -6,7 +6,7 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Patch: Add Z-order to style to make sure it appears on top.
 
 2.3.0
 -----
