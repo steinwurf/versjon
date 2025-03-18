@@ -1,8 +1,9 @@
 <style>
-  /* Style the button that is used to open and close the version content */
+  /* Style the button that is used to open and close the versjon content */
+
   .versjon {
-    background-color: var(--color-background-secondary);
-    color: var(--color-foreground-primary);
+    background-color: #777;
+    color: white;
     cursor: pointer;
     padding: 10px;
     width: 100%;
@@ -10,16 +11,15 @@
     text-align: left;
     outline: none;
     font-size: 15px;
-    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
   }
 
   .versjon:hover {
-    background-color: var(--color-background-hover);
+    background-color: #555;
   }
 
   .versjon:after {
     content: "\002B";
-    color: var(--color-foreground-primary);
+    color: white;
     font-weight: bold;
     float: right;
     margin-left: 5px;
@@ -33,8 +33,7 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
-    background-color: var(--color-background-primary);
-    color: var(--color-foreground-secondary);
+    background-color: #f1f1f1;
   }
 
   .versjon-content-inner {
@@ -49,20 +48,16 @@
     z-index: 9999;
   }
 
-  /* Warnings */
-  p.versjon-old-warning,
-  p.versjon-dev-warning {
+  p.versjon-old-warning {
     margin: 10px 0;
     padding: 5px 10px;
     border-radius: 4px;
+
     letter-spacing: 1px;
     color: #fff;
     text-shadow: 0 0 2px #000;
     text-align: center;
-    transition: background 0.2s ease-in-out;
-  }
 
-  p.versjon-old-warning {
     background: #d40
       repeating-linear-gradient(
         135deg,
@@ -73,7 +68,21 @@
       );
   }
 
+  p.versjon-old-warning a {
+    color: #fff;
+    border-color: #fff;
+  }
+
   p.versjon-dev-warning {
+    margin: 10px 0;
+    padding: 5px 10px;
+    border-radius: 4px;
+
+    letter-spacing: 1px;
+    color: #fff;
+    text-shadow: 0 0 2px #000;
+    text-align: center;
+
     background: #e67300
       repeating-linear-gradient(
         135deg,
@@ -84,54 +93,9 @@
       );
   }
 
-  p.versjon-old-warning a,
   p.versjon-dev-warning a {
     color: #fff;
     border-color: #fff;
-    transition: color 0.2s ease-in-out;
-  }
-
-  /* Adapt to Furo's dark mode */
-  [data-theme="dark"] .versjon {
-    background-color: var(--color-background-secondary);
-    color: var(--color-foreground-primary);
-  }
-
-  [data-theme="dark"] .versjon:hover {
-    background-color: var(--color-background-hover);
-  }
-
-  [data-theme="dark"] .versjon-content {
-    background-color: var(--color-background-secondary);
-    color: var(--color-foreground-secondary);
-  }
-
-  [data-theme="dark"] p.versjon-old-warning {
-    background: #a00
-      repeating-linear-gradient(
-        135deg,
-        transparent,
-        transparent 56px,
-        rgba(255, 255, 255, 0.2) 56px,
-        rgba(255, 255, 255, 0.2) 112px
-      );
-  }
-
-  [data-theme="dark"] p.versjon-dev-warning {
-    background: #b55a00
-      repeating-linear-gradient(
-        135deg,
-        transparent,
-        transparent 56px,
-        rgba(255, 255, 255, 0.2) 56px,
-        rgba(255, 255, 255, 0.2) 112px
-      );
-  }
-
-  [data-theme="dark"] p.versjon-old-warning a,
-  [data-theme="dark"] p.versjon-dev-warning a {
-    color: var(--color-foreground-primary);
-    border-color: var(--color-foreground-primary);
   }
 </style>
 <link
