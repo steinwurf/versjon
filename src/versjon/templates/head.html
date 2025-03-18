@@ -1,6 +1,5 @@
 <style>
-  /* Style the button that is used to open and close the versjon content */
-
+  /* Default (light mode) styles */
   .versjon {
     background-color: #777;
     color: white;
@@ -11,6 +10,7 @@
     text-align: left;
     outline: none;
     font-size: 15px;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
   }
 
   .versjon:hover {
@@ -32,8 +32,9 @@
   .versjon-content {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.2s ease-out;
+    transition: max-height 0.2s ease-out, background-color 0.2s ease-in-out;
     background-color: #f1f1f1;
+    color: #000;
   }
 
   .versjon-content-inner {
@@ -48,16 +49,20 @@
     z-index: 9999;
   }
 
-  p.versjon-old-warning {
+  /* Warnings */
+  p.versjon-old-warning,
+  p.versjon-dev-warning {
     margin: 10px 0;
     padding: 5px 10px;
     border-radius: 4px;
-
     letter-spacing: 1px;
     color: #fff;
     text-shadow: 0 0 2px #000;
     text-align: center;
+    transition: background 0.2s ease-in-out;
+  }
 
+  p.versjon-old-warning {
     background: #d40
       repeating-linear-gradient(
         135deg,
@@ -68,21 +73,7 @@
       );
   }
 
-  p.versjon-old-warning a {
-    color: #fff;
-    border-color: #fff;
-  }
-
   p.versjon-dev-warning {
-    margin: 10px 0;
-    padding: 5px 10px;
-    border-radius: 4px;
-
-    letter-spacing: 1px;
-    color: #fff;
-    text-shadow: 0 0 2px #000;
-    text-align: center;
-
     background: #e67300
       repeating-linear-gradient(
         135deg,
@@ -93,9 +84,60 @@
       );
   }
 
+  p.versjon-old-warning a,
   p.versjon-dev-warning a {
     color: #fff;
     border-color: #fff;
+    transition: color 0.2s ease-in-out;
+  }
+
+  /* Dark mode styles */
+  @media (prefers-color-scheme: dark) {
+    .versjon {
+      background-color: #333;
+      color: #ddd;
+    }
+
+    .versjon:hover {
+      background-color: #444;
+    }
+
+    .versjon:after {
+      color: #ddd;
+    }
+
+    .versjon-content {
+      background-color: #222;
+      color: #ddd;
+    }
+
+    p.versjon-old-warning {
+      background: #a00
+        repeating-linear-gradient(
+          135deg,
+          transparent,
+          transparent 56px,
+          rgba(255, 255, 255, 0.2) 56px,
+          rgba(255, 255, 255, 0.2) 112px
+        );
+    }
+
+    p.versjon-dev-warning {
+      background: #b55a00
+        repeating-linear-gradient(
+          135deg,
+          transparent,
+          transparent 56px,
+          rgba(255, 255, 255, 0.2) 56px,
+          rgba(255, 255, 255, 0.2) 112px
+        );
+    }
+
+    p.versjon-old-warning a,
+    p.versjon-dev-warning a {
+      color: #ddd;
+      border-color: #ddd;
+    }
   }
 </style>
 <link
